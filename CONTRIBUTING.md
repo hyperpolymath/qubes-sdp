@@ -2,6 +2,26 @@
 
 Thank you for your interest in contributing to Qubes SDP! This document provides guidelines for contributing to the project.
 
+## Open Contribution Model
+
+**Qubes SDP operates under TPCF Perimeter 3 (Community Sandbox)** - we welcome open contributions from everyone, regardless of employer, experience level, or background.
+
+### Our Principles
+
+- **Open to all** - Anyone can contribute, from first-time contributors to experienced developers
+- **Community governance** - Decisions made through consensus and maintainer discretion
+- **No corporate control** - Project remains independent from any single organization
+- **Meritocracy** - Contributions judged on technical merit and community value
+- **Emotional safety** - We value learning, experimentation, and reversibility (see [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md))
+
+### New Contributors Welcome!
+
+- Never contributed to open source before? Perfect! We're beginner-friendly.
+- Not sure where to start? Check issues labeled "good first issue"
+- Questions welcome - ask in issues or discussions
+- Use `--dry-run` modes to experiment safely
+- All mistakes are reversible and learning opportunities
+
 ## Ways to Contribute
 
 ### Report Bugs

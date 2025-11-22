@@ -1,9 +1,14 @@
 # Qubes SDP - Software Development Platform
 
-[![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE)
+[![License: MIT + Palimpsest](https://img.shields.io/badge/license-MIT%20%2B%20Palimpsest%20v0.8-blue.svg)](LICENSE)
 [![Qubes OS](https://img.shields.io/badge/Qubes%20OS-4.1%2B-blue.svg)](https://www.qubes-os.org/)
+[![RSR Compliance](https://img.shields.io/badge/RSR-Gold-gold.svg)](scripts/rsr-verify.sh)
+[![TPCF](https://img.shields.io/badge/TPCF-Perimeter%203-green.svg)](CODE_OF_CONDUCT.md)
+[![Nix](https://img.shields.io/badge/Nix-Flake-blue.svg)](flake.nix)
 
 Automated Qubes OS configuration system for secure, isolated work environments. Deploy a complete qube topology with one command.
+
+**TPCF Perimeter 3 (Community Sandbox)** - Open contribution, community governance, no corporate control.
 
 ## Overview
 
@@ -65,6 +70,21 @@ Pre-configured for common workflows:
 - Security best practices
 - API reference
 - Example configurations
+
+### 🏆 RSR Framework Compliance
+
+This project adheres to the [Rhodium Standard Repository](https://github.com/hyperpolymath/rhodium-standard-repository) framework:
+
+- ✅ **Comprehensive Documentation** - README, QUICKSTART, Wiki, CONTRIBUTING, SECURITY
+- ✅ **Governance** - CODE_OF_CONDUCT, MAINTAINERS, TPCF Perimeter 3
+- ✅ **Build Systems** - justfile, Makefile, Nix flake, CI/CD
+- ✅ **Security** - RFC 9116 security.txt, vulnerability disclosure, automated tests
+- ✅ **Emotional Safety** - Palimpsest license, reversibility, learning culture
+- ✅ **Offline-First** - Air-gapped operation capability
+- ✅ **Reproducibility** - Nix flake for deterministic builds
+- ✅ **.well-known/** - security.txt, ai.txt, humans.txt
+
+**Verify compliance**: `bash scripts/rsr-verify.sh`
 
 ## Quick Start
 
@@ -257,15 +277,21 @@ Auto-installs missing templates if configured.
 
 ## Contributing
 
-Contributions welcome! Please:
+**This is a TPCF Perimeter 3 (Community Sandbox) project** - all contributions welcome!
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+We value:
+- 🤝 **Open contribution** - Everyone can participate
+- 🧪 **Experimentation** - Mistakes are learning opportunities
+- 🔄 **Reversibility** - All changes can be undone
+- 💚 **Emotional safety** - No shaming or gatekeeping
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+**Get started:**
+1. Read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) - Our community standards
+2. Read [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute
+3. Check [MAINTAINERS.md](MAINTAINERS.md) - Governance model
+4. Fork, create a feature branch, test thoroughly, submit PR
+
+**New contributors**: We're beginner-friendly! Ask questions, experiment safely with dry-run modes, and learn as you go.
 
 ## Support
 
@@ -297,7 +323,21 @@ bash tests/security-tests.sh
 
 ## License
 
-GPLv3 - See [LICENSE](LICENSE) file for details.
+**Dual Licensed**: Choose either license at your option:
+
+1. **MIT License** - For maximum compatibility and permissive use
+2. **Palimpsest License v0.8** - MIT + emotional safety guarantees
+
+The Palimpsest license extends MIT with principles of:
+- **Reversibility** - All changes easily undoable
+- **Psychological safety** - No shame, blame, or weaponizing errors
+- **Learning culture** - Experimentation encouraged
+- **Transparent costs** - Clear consequences before actions
+- **Inclusive design** - Accommodates diverse backgrounds and abilities
+
+See [LICENSE](LICENSE) for full text and details.
+
+**Why dual license?** Use MIT if you only need a permissive open source license. Choose Palimpsest if you want emotional safety guarantees for contributors and users.
 
 ## Disclaimer
 
@@ -323,6 +363,14 @@ Created and maintained by the Qubes SDP community.
 
 **⚠️ Important**: Never run untrusted scripts in dom0. Review all code before execution. Use dry-run mode to test before applying changes.
 
-**🔐 Security**: Report security issues privately to security@example.com
+**🔐 Security**: Report vulnerabilities privately via [GitHub Security Advisories](https://github.com/hyperpolymath/qubes-sdp/security/advisories) or email security@qubes-sdp.org - See [SECURITY.md](SECURITY.md) and [.well-known/security.txt](.well-known/security.txt)
 
-**📧 Contact**: For support, see [SUPPORT.md](SUPPORT.md)
+**📧 Contact**:
+- General questions: contribute@qubes-sdp.org
+- Code of Conduct: conduct@qubes-sdp.org
+- Security: security@qubes-sdp.org
+
+**🌐 Community**:
+- Governance: [MAINTAINERS.md](MAINTAINERS.md)
+- Code of Conduct: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
