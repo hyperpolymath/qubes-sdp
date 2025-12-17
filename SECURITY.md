@@ -304,7 +304,7 @@ We thank the following researchers for responsible disclosure:
 
 This security policy is reviewed quarterly and updated as needed.
 
-Last updated: 2024-11-22
+Last updated: 2025-12-17
 Version: 1.0.0
 
 ---

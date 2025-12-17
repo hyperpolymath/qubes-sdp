@@ -150,7 +150,7 @@
             checkPhase = ''
               # Check required files
               test -f README.md || (echo "Missing README.md"; exit 1)
-              test -f LICENSE || (echo "Missing LICENSE"; exit 1)
+              test -f LICENSE.txt || (echo "Missing LICENSE.txt"; exit 1)
               test -f SECURITY.md || (echo "Missing SECURITY.md"; exit 1)
               test -f CODE_OF_CONDUCT.md || (echo "Missing CODE_OF_CONDUCT.md"; exit 1)
               test -f CONTRIBUTING.md || (echo "Missing CONTRIBUTING.md"; exit 1)

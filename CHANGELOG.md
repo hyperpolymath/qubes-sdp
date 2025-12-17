@@ -5,6 +5,25 @@ All notable changes to Qubes SDP will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-12-17
+
+### Security
+- **CRITICAL**: Fixed expired security.txt (was 2025-11-22, now 2026-12-17)
+- SHA-pinned all GitHub Actions for supply chain security (OSSF Scorecard compliance)
+- Updated all `actions/checkout` to v4.2.2 with SHA pins
+- Updated CodeQL actions to v4.31.9/v3.31.9 with SHA pins
+- Updated OSSF Scorecard action to v2.3.1 with SHA pin
+- Pinned trufflesecurity/trufflehog, editorconfig-checker, and other third-party actions
+
+### Fixed
+- Fixed LICENSE.txt check in flake.nix (was checking for non-existent LICENSE file)
+- Fixed version mismatch in STATE.scm (now consistently 1.0.0)
+- Updated SECURITY.md last-updated date
+
+### Changed
+- Updated STATE.scm to reflect current project status (85% completion)
+- Added session history for security review
+
 ## [1.0.0] - 2024-11-22
 
 ### Added
@@ -103,18 +122,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned
-- Web-based configuration UI
-- Additional topology presets
-- Automated security auditing
+### Roadmap
+
+#### v1.1.0 - Testing & Validation (Target: Q1 2026)
+- [ ] Expand test coverage to 90%+
+- [ ] Add integration tests for Qubes VM interactions
+- [ ] Automated security regression testing
+- [ ] Performance benchmarking suite
+
+#### v1.2.0 - Enhanced Features (Target: Q2 2026)
+- [ ] Web-based configuration UI
+- [ ] Additional topology presets (privacy-focused, enterprise, minimal)
+- [ ] Plugin system for custom qubes
+- [ ] Automated security auditing tools
+
+#### v1.3.0 - Enterprise Features (Target: Q3 2026)
+- [ ] Multi-language support (i18n)
+- [ ] Video tutorials and interactive guides
+- [ ] Docker-based testing environment
+- [ ] CI/CD pipeline integration examples
+
+#### Future Considerations
 - Performance optimization tools
-- Multi-language support
-- Video tutorials
-- Plugin system enhancements
-- CI/CD pipeline integration
-- Docker-based testing environment
+- Integration with Qubes OS 4.3+ features
+- Remote management capabilities (with proper security)
+- Backup rotation and lifecycle management
 
 ## Version History
+
+### [1.0.1] - 2025-12-17
+- Security hardening release
+- SHA-pinned all GitHub Actions
+- Fixed security.txt expiration
 
 ### [1.0.0] - 2024-11-22
 - Initial release

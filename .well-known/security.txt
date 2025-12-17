@@ -4,7 +4,7 @@ Hash: SHA512
 # Security Policy - Qubes SDP
 
 Contact: security@qubes-sdp.org
-Expires: 2025-11-22T00:00:00.000Z
+Expires: 2026-12-17T00:00:00.000Z
 Preferred-Languages: en
 Canonical: https://github.com/hyperpolymath/qubes-sdp/.well-known/security.txt
 Policy: https://github.com/hyperpolymath/qubes-sdp/blob/main/SECURITY.md
