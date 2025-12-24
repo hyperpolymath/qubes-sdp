@@ -1,0 +1,32 @@
+= Qubes SDP
+:toc: auto
+:toclevels: 2
+
+Automated Qubes OS configuration system for secure, isolated work environments. Deploy a complete qube topology with one command.
+
+== Overview
+
+Qubes SDP provides automated deployment and configuration of Qubes OS environments, enabling rapid setup of secure, compartmentalized workstations.
+
+== Features
+
+* One-command qube topology deployment
+* Secure isolation between environments
+* Automated configuration management
+* RSR-compliant structure
+
+== Requirements
+
+* Qubes OS 4.x
+* Administrative access
+
+== Usage
+
+[source,bash]
+----
+./deploy.sh
+----
+
+== License
+
+AGPL-3.0-or-later
