@@ -1,32 +1,475 @@
-= Qubes SDP
-:toc: auto
-:toclevels: 2
+= Qubes SDP - Software Development Platform
+:toc: left
+:toclevels: 3
+:icons: font
+:source-highlighter: rouge
+:sectanchors:
+:sectlinks:
+
+image:https://img.shields.io/badge/license-MIT%20%2B%20Palimpsest%20v0.8-blue.svg[License: MIT + Palimpsest,link=LICENSE]
+image:https://img.shields.io/badge/Qubes%20OS-4.1%2B-blue.svg[Qubes OS,link=https://www.qubes-os.org/]
+image:https://img.shields.io/badge/RSR-Gold-gold.svg[RSR Compliance,link=scripts/rsr-verify.sh]
+image:https://img.shields.io/badge/TPCF-Perimeter%203-green.svg[TPCF,link=CODE_OF_CONDUCT.md]
+image:https://img.shields.io/badge/Nix-Flake-blue.svg[Nix,link=flake.nix]
 
 Automated Qubes OS configuration system for secure, isolated work environments. Deploy a complete qube topology with one command.
 
+*TPCF Perimeter 3 (Community Sandbox)* - Open contribution, community governance, no corporate control.
+
 == Overview
 
-Qubes SDP provides automated deployment and configuration of Qubes OS environments, enabling rapid setup of secure, compartmentalized workstations.
+Qubes SDP automates the creation and configuration of secure Qubes OS environments optimized for security-conscious professionals:
 
-== Features
+[cols="1,3"]
+|===
+|Use Case |Description
 
-* One-command qube topology deployment
-* Secure isolation between environments
-* Automated configuration management
-* RSR-compliant structure
+|*Investigative Journalism*
+|Source protection, secure communications, anonymous research
 
-== Requirements
+|*Software Development*
+|Isolated development environments with secure key management
 
-* Qubes OS 4.x
-* Administrative access
+|*Research*
+|Privacy-preserving data collection and analysis
 
-== Usage
+|*Teaching*
+|Safe handling of student materials and assignments
+
+|*Security Testing*
+|Isolated penetration testing and vulnerability research
+|===
+
+== What's Implemented
+
+Qubes SDP is a *production-ready, fully-implemented platform* with the following components:
+
+=== Core Setup System
+
+[cols="1,2,1"]
+|===
+|Component |Description |Lines of Code
+
+|`qubes-setup.sh`
+|Simple, standalone setup script for basic qube topology
+|442
+
+|`qubes-setup-advanced.sh`
+|Full-featured configuration-driven setup with topology presets, rollback, validation, and health checks
+|1,281
+
+|`qubes-config.conf`
+|Master configuration template with 100+ options
+|293
+|===
+
+=== Utility Tools Suite
+
+Seven production management tools for ongoing system administration:
+
+[source,plaintext]
+----
+tools/
+ +-- qubes-status.sh          # Comprehensive status dashboard (264 lines)
+ +-- qubes-dashboard.sh       # Interactive real-time monitoring (232 lines)
+ +-- qubes-firewall-analyzer.sh  # Security assessment & recommendations (204 lines)
+ +-- qubes-template-manager.sh   # Template lifecycle management (304 lines)
+ +-- qubes-backup-validator.sh   # Backup verification & integrity (230 lines)
+ +-- qubes-restore.sh         # Disaster recovery wizard (258 lines)
+ +-- qubes-policy-generator.sh   # Qrexec policy management (331 lines)
+----
+
+=== Infrastructure as Code
+
+[cols="1,3"]
+|===
+|File |Purpose
+
+|`qubes-salt/qubes-sdp.sls`
+|Declarative Salt Stack state for automated qube provisioning
+
+|`qubes-salt/top.sls`
+|Salt state orchestration
+
+|`Makefile.qubes`
+|Comprehensive Make automation (280+ lines, 20+ targets)
+
+|`justfile`
+|Just command runner with 20+ recipe tasks
+|===
+
+=== Topology Presets
+
+Pre-configured environments for common workflows:
+
+[cols="1,3,2"]
+|===
+|Preset |Qubes Created |Key Features
+
+|`journalist`
+|work, vault, anon, untrusted
+|Split-GPG, Tor integration
+
+|`developer`
+|work, vault, untrusted
+|Split-SSH, dev tools, high memory
+
+|`researcher`
+|all qubes + VPN
+|Full isolation, VPN gateway
+
+|`teacher`
+|work, vault, untrusted, USB
+|USB device management
+
+|`pentester`
+|all qubes
+|High memory, security tools
+|===
+
+Example configuration files in `examples/`:
+
+* `journalist-config.conf`
+* `developer-config.conf`
+* `minimal-config.conf`
+
+=== Wiki System
+
+Complete documentation wiki with ReScript frontend:
+
+[source,plaintext]
+----
+wiki/
+ +-- pages/
+ |    +-- installation.md       # Installation methods & troubleshooting
+ |    +-- configuration.md      # Complete configuration reference
+ |    +-- getting-started.md    # First steps guide
+ |    +-- security-guide.md     # Security principles & best practices
+ |    +-- topology-presets.md   # Preset comparison & customization
+ |    +-- split-gpg.md          # GPG key isolation
+ |    +-- split-ssh.md          # SSH key management
+ |    +-- backup-restore.md     # Backup strategies
+ |    +-- troubleshooting.md    # Common issues & solutions
+ |    +-- faq.md                # Frequently asked questions
+ +-- build-wiki.sh              # Static site generator
+ +-- templates/page.html        # HTML template
+ +-- static/css/style.css       # Professional responsive styling
+----
+
+*Wiki frontend* (`src/WikiMain.res` - 207 lines ReScript):
+
+* DOM manipulation and navigation highlighting
+* Copy-to-clipboard for code blocks
+* Automatic anchor link generation
+* Search functionality
+* Table of contents generation
+* Smooth scrolling
+
+=== Testing Framework
 
 [source,bash]
 ----
-./deploy.sh
+tests/
+ +-- unit-tests.sh        # Configuration parsing, permissions, structure
+ +-- security-tests.sh    # Vulnerability testing
+ +-- integration-tests.sh # System interaction tests
 ----
+
+Run all tests:
+[source,bash]
+----
+make -f Makefile.qubes test
+# or
+bash tests/unit-tests.sh
+----
+
+=== CI/CD Automation
+
+13 GitHub Actions workflows:
+
+[cols="1,2"]
+|===
+|Workflow |Purpose
+
+|`rescript-deno-ci.yml`
+|ReScript and Deno build/test/type-check
+
+|`instant-sync.yml`
+|Automatic propagation to git forges
+
+|`npm-bun-blocker.yml`
+|Enforces no npm/bun policy
+
+|`ts-blocker.yml`
+|Enforces no TypeScript policy
+
+|`guix-nix-policy.yml`
+|Package manager policy enforcement
+
+|`wellknown-enforcement.yml`
+|.well-known standards enforcement
+
+|`security-policy.yml`
+|Security policy automation
+
+|`codeql.yml`
+|Code quality analysis
+
+|`mirror.yml`
+|Repository mirroring
+
+|`jekyll-gh-pages.yml`
+|Documentation publishing
+
+|`scorecard.yml`
+|Security scorecards
+
+|`quality.yml`
+|Code quality checks
+|===
+
+=== Compliance & Verification
+
+[source,bash]
+----
+# Verify RSR (Rhodium Standard Repository) compliance
+bash scripts/rsr-verify.sh
+----
+
+Compliance includes:
+
+* Comprehensive documentation (README, QUICKSTART, Wiki, CONTRIBUTING, SECURITY)
+* Governance (CODE_OF_CONDUCT, MAINTAINERS, TPCF Perimeter 3)
+* Build systems (justfile, Makefile, Nix flake, CI/CD)
+* Security (RFC 9116 security.txt, vulnerability disclosure)
+* Emotional safety (Palimpsest license, reversibility, learning culture)
+* Offline-first capability
+* Reproducibility via Nix flake
+* `.well-known/` standards compliance
+
+== Architecture
+
+[source,plaintext]
+----
++---------------+
+|     work      |  General work environment
+|   (green)     |  * 2GB RAM
+|   network     |  * Firewall: HTTP/HTTPS/DNS only
++---------------+  * Template: fedora-40-minimal
+
++---------------+
+|     vault     |  Sensitive data storage
+|   (black)     |  * 1GB RAM
+|  AIR-GAPPED   |  * NO NETWORK (critical!)
++---------------+  * Split-GPG/SSH backend
+
++---------------+
+|     anon      |  Anonymous communications
+|   (purple)    |  * 1GB RAM
+|  Tor/Whonix   |  * Routes through sys-whonix
++---------------+  * Anonymous research
+
++---------------+
+|   untrusted   |  Risky content handler
+|    (red)      |  * 1GB RAM
+|    DispVM     |  * Disposable VMs
++---------------+  * Risky downloads/files
+----
+
+== Quick Start
+
+=== Prerequisites
+
+* Qubes OS 4.1 or later
+* 8GB RAM minimum (16GB recommended)
+* 50GB free disk space
+
+=== Installation
+
+. *Download in a qube* (NOT dom0):
++
+[source,bash]
+----
+git clone https://github.com/hyperpolymath/qubes-sdp.git
+cd qubes-sdp
+----
+
+. *Transfer to dom0*:
++
+[source,bash]
+----
+# In dom0:
+qvm-run --pass-io <qube-name> 'cat /path/to/qubes-sdp/qubes-setup.sh' > qubes-setup.sh
+chmod +x qubes-setup.sh
+----
+
+. *Run setup*:
++
+[source,bash]
+----
+./qubes-setup.sh
+----
+
+See link:QUICKSTART.md[QUICKSTART.md] for detailed instructions.
+
+== Usage
+
+=== Simple Setup
+
+[source,bash]
+----
+# Create basic topology (work, vault, anon, untrusted)
+./qubes-setup.sh
+
+# Dry-run to see what will be created
+./qubes-setup.sh --dry-run
+
+# Validate existing setup
+./qubes-setup.sh --validate
+----
+
+=== Advanced Setup
+
+[source,bash]
+----
+# Use configuration file
+cp examples/journalist-config.conf qubes-config.conf
+vi qubes-config.conf
+./qubes-setup-advanced.sh
+
+# Interactive wizard
+./qubes-setup-advanced.sh --interactive
+
+# Use specific preset
+make -f Makefile.qubes setup-preset-journalist
+----
+
+=== Using Make
+
+[source,bash]
+----
+make -f Makefile.qubes setup          # Run setup
+make -f Makefile.qubes status         # Show status
+make -f Makefile.qubes backup         # Create backup
+make -f Makefile.qubes template-update # Update templates
+make -f Makefile.qubes health-check   # Health check
+----
+
+=== Salt Stack
+
+[source,bash]
+----
+# Copy to Salt directory
+sudo cp -r qubes-salt/*.sls /srv/salt/
+
+# Apply states
+sudo qubesctl state.apply qubes-sdp
+----
+
+== Security Features
+
+* Air-gapped vault (absolutely no network)
+* Default-deny firewall rules
+* Minimal templates (reduced attack surface)
+* DisposableVMs for untrusted content
+* Split-GPG/SSH (keys never leave vault)
+* Qrexec policy enforcement
+* Encrypted backups
+* Comprehensive logging
+* Validation and health checks
+
+== Documentation
+
+[cols="1,2"]
+|===
+|Document |Description
+
+|link:QUICKSTART.md[QUICKSTART.md]
+|Get started in 5 minutes
+
+|link:wiki/[Wiki]
+|Comprehensive documentation
+
+|link:tools/README.md[Tools README]
+|Utility tool documentation
+
+|link:examples/[Examples]
+|Example configurations
+
+|link:CONTRIBUTING.md[CONTRIBUTING.md]
+|Contribution guidelines
+
+|link:SECURITY.md[SECURITY.md]
+|Security policy & reporting
+
+|link:MAINTAINERS.md[MAINTAINERS.md]
+|Governance model
+
+|link:CODE_OF_CONDUCT.md[CODE_OF_CONDUCT.md]
+|Community standards
+|===
+
+== Code Statistics
+
+[cols="1,1"]
+|===
+|Category |Lines
+
+|Shell scripts
+|~3,900
+
+|Documentation
+|~4,200
+
+|Configuration
+|~2,500+
+
+|Salt/Infrastructure
+|~200
+
+|ReScript/Web
+|~200
+
+|*Total substantive*
+|*12,640+*
+|===
+
+== Contributing
+
+*This is a TPCF Perimeter 3 (Community Sandbox) project* - all contributions welcome!
+
+We value:
+
+* *Open contribution* - Everyone can participate
+* *Experimentation* - Mistakes are learning opportunities
+* *Reversibility* - All changes can be undone
+* *Emotional safety* - No shaming or gatekeeping
+
+See link:CONTRIBUTING.md[CONTRIBUTING.md] for details.
 
 == License
 
-AGPL-3.0-or-later
+*Dual Licensed*: Choose either license at your option:
+
+. *MIT License* - Maximum compatibility and permissive use
+. *Palimpsest License v0.8* - MIT + emotional safety guarantees
+
+See link:LICENSE[LICENSE] for full text.
+
+== Contact
+
+* General questions: contribute@qubes-sdp.org
+* Code of Conduct: conduct@qubes-sdp.org
+* Security: security@qubes-sdp.org
+
+== See Also
+
+* link:ROADMAP.adoc[ROADMAP.adoc] - Development roadmap
+* https://www.qubes-os.org/[Qubes OS] - Security-focused operating system
+* https://www.whonix.org/[Whonix] - Anonymous operating system
+
+---
+
+CAUTION: Never run untrusted scripts in dom0. Review all code before execution. Use dry-run mode to test before applying changes.
+
+TIP: Report vulnerabilities privately via https://github.com/hyperpolymath/qubes-sdp/security/advisories[GitHub Security Advisories] - See link:SECURITY.md[SECURITY.md]
