@@ -1,4 +1,8 @@
 = Qubes SDP - Software Development Platform
+
+image:https://img.shields.io/badge/License-MPL_2.0-blue.svg[MPL-2.0,link="https://opensource.org/licenses/MPL-2.0"]
+image:https://img.shields.io/badge/Philosophy-Palimpsest-purple.svg[Palimpsest,link="https://github.com/hyperpolymath/palimpsest-licence"]
+
 :toc: left
 :toclevels: 3
 :icons: font
@@ -6,7 +10,6 @@
 :sectanchors:
 :sectlinks:
 
-image:https://img.shields.io/badge/license-MIT%20%2B%20Palimpsest%20v0.8-blue.svg[License: MIT + Palimpsest,link=LICENSE]
 image:https://img.shields.io/badge/Qubes%20OS-4.1%2B-blue.svg[Qubes OS,link=https://www.qubes-os.org/]
 image:https://img.shields.io/badge/RSR-Gold-gold.svg[RSR Compliance,link=scripts/rsr-verify.sh]
 image:https://img.shields.io/badge/TPCF-Perimeter%203-green.svg[TPCF,link=CODE_OF_CONDUCT.md]
