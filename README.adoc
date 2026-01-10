@@ -454,7 +454,7 @@ See link:CONTRIBUTING.md[CONTRIBUTING.md] for details.
 
 *Dual Licensed*: Choose either license at your option:
 
-. *MIT License* - Maximum compatibility and permissive use
+. *Palimpsest-MPL-1.0 License* - Maximum compatibility and permissive use
 . *Palimpsest License v0.8* - MIT + emotional safety guarantees
 
 See link:LICENSE[LICENSE] for full text.
