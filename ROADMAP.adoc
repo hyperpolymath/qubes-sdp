@@ -1,0 +1,389 @@
+= Qubes SDP Roadmap
+:toc: left
+:toclevels: 2
+:icons: font
+:sectanchors:
+
+Development roadmap for Qubes SDP - Software Development Platform.
+
+== Current Status: v1.0.0 (Production Ready)
+
+Released: 2024-11-22
+
+Qubes SDP is a *fully-implemented, production-ready platform* with the following complete:
+
+=== Completed Features
+
+==== Core Infrastructure
+
+[cols="1,3,1"]
+|===
+|Feature |Description |Status
+
+|Simple Setup
+|Standalone `qubes-setup.sh` for one-command deployment
+|Complete
+
+|Advanced Setup
+|Configuration-driven `qubes-setup-advanced.sh` with presets, rollback, validation
+|Complete
+
+|Salt Stack Integration
+|Declarative infrastructure as code via `qubes-salt/*.sls`
+|Complete
+
+|Make Automation
+|`Makefile.qubes` with 20+ targets
+|Complete
+
+|Just Runner
+|`justfile` with 20+ recipes
+|Complete
+
+|Interactive Wizard
+|Guided setup via `--interactive` flag
+|Complete
+|===
+
+==== Qubes & Topologies
+
+[cols="1,2,1"]
+|===
+|Component |Description |Status
+
+|Work Qube
+|General work environment with restricted firewall
+|Complete
+
+|Vault Qube
+|Air-gapped storage (no network)
+|Complete
+
+|Anon Qube
+|Tor/Whonix integration for anonymity
+|Complete
+
+|Untrusted Qube
+|DisposableVM template for risky content
+|Complete
+
+|VPN Qube
+|Optional VPN proxy gateway
+|Complete
+
+|USB Qube
+|Optional USB device management
+|Complete
+
+|5 Topology Presets
+|journalist, developer, researcher, teacher, pentester
+|Complete
+|===
+
+==== Management Tools
+
+[cols="1,2,1"]
+|===
+|Tool |Purpose |Status
+
+|`qubes-status.sh`
+|Comprehensive status dashboard
+|Complete
+
+|`qubes-dashboard.sh`
+|Interactive real-time monitoring
+|Complete
+
+|`qubes-firewall-analyzer.sh`
+|Security assessment & recommendations
+|Complete
+
+|`qubes-template-manager.sh`
+|Template lifecycle management
+|Complete
+
+|`qubes-backup-validator.sh`
+|Backup verification & integrity checks
+|Complete
+
+|`qubes-restore.sh`
+|Disaster recovery wizard
+|Complete
+
+|`qubes-policy-generator.sh`
+|Qrexec policy management
+|Complete
+|===
+
+==== Security Features
+
+[cols="1,1"]
+|===
+|Feature |Status
+
+|Air-gapped vault enforcement
+|Complete
+
+|Default-deny firewall policies
+|Complete
+
+|Minimal template usage
+|Complete
+
+|Split-GPG automation
+|Complete
+
+|Split-SSH automation
+|Complete
+
+|Qrexec policy generation
+|Complete
+
+|Encrypted backups
+|Complete
+
+|Input validation
+|Complete
+
+|Security testing suite
+|Complete
+|===
+
+==== Documentation
+
+[cols="1,1"]
+|===
+|Documentation |Status
+
+|README (comprehensive)
+|Complete
+
+|README.adoc (detailed)
+|Complete
+
+|QUICKSTART guide
+|Complete
+
+|Wiki system (10 pages)
+|Complete
+
+|API documentation
+|Complete
+
+|Tools documentation
+|Complete
+
+|Example configurations
+|Complete
+
+|CONTRIBUTING guide
+|Complete
+
+|SECURITY policy
+|Complete
+
+|MAINTAINERS/governance
+|Complete
+
+|CODE_OF_CONDUCT
+|Complete
+|===
+
+==== CI/CD & Automation
+
+[cols="1,1"]
+|===
+|Workflow |Status
+
+|ReScript/Deno CI
+|Complete
+
+|Instant-sync (forge propagation)
+|Complete
+
+|Policy enforcement (npm/bun/TS blockers)
+|Complete
+
+|Security workflows
+|Complete
+
+|Code quality (CodeQL, Scorecard)
+|Complete
+
+|Documentation publishing
+|Complete
+|===
+
+==== Web Frontend
+
+[cols="1,1"]
+|===
+|Component |Status
+
+|ReScript wiki frontend
+|Complete
+
+|Interactive features (TOC, search, copy)
+|Complete
+
+|Responsive styling
+|Complete
+
+|Static site generator
+|Complete
+|===
+
+== Future Development
+
+=== Phase 2: Enhanced User Experience
+
+[cols="1,3,1"]
+|===
+|Feature |Description |Priority
+
+|*Web-based Configuration UI*
+|Browser-based interface for configuration management, topology visualization, and real-time monitoring
+|High
+
+|*Video Tutorials*
+|Walkthrough videos for installation, configuration, and common workflows
+|Medium
+
+|*Multi-language Support*
+|Internationalization of documentation and UI elements
+|Medium
+
+|*Improved Error Messages*
+|User-friendly error explanations with suggested remediation steps
+|Medium
+|===
+
+=== Phase 3: Advanced Automation
+
+[cols="1,3,1"]
+|===
+|Feature |Description |Priority
+
+|*Automated Security Auditing*
+|Continuous security posture assessment with vulnerability scanning
+|High
+
+|*Plugin System*
+|Extensible architecture for custom qubes, policies, and integrations
+|High
+
+|*CI/CD Pipeline Integration*
+|Pre-built integration templates for common CI systems
+|Medium
+
+|*Docker-based Testing*
+|Containerized test environment for development outside Qubes
+|Medium
+|===
+
+=== Phase 4: Scaling & Enterprise
+
+[cols="1,3,1"]
+|===
+|Feature |Description |Priority
+
+|*Additional Topology Presets*
+|Specialized configurations for healthcare, legal, finance, activism
+|Medium
+
+|*Multi-machine Orchestration*
+|Coordinate configurations across multiple Qubes installations
+|Low
+
+|*Centralized Management*
+|Dashboard for managing multiple Qubes SDP deployments
+|Low
+
+|*Performance Optimization*
+|Resource usage analysis and optimization recommendations
+|Medium
+|===
+
+=== Phase 5: Ecosystem Integration
+
+[cols="1,3,1"]
+|===
+|Feature |Description |Priority
+
+|*Whonix Deep Integration*
+|Enhanced workflows for anonymous operations
+|Medium
+
+|*Hardware Security Module Support*
+|HSM integration for split-GPG/SSH backends
+|Low
+
+|*Cloud Backup Targets*
+|Encrypted backup to various cloud storage providers
+|Low
+
+|*Mobile Companion*
+|Tauri/Dioxus mobile app for remote monitoring (Rust-first)
+|Low
+|===
+
+== Contributing to the Roadmap
+
+This is a *TPCF Perimeter 3 (Community Sandbox)* project. All contributions to roadmap items are welcome.
+
+=== How to Contribute
+
+. *Pick an item* from the roadmap or propose a new one
+. *Discuss* in GitHub Issues before major work
+. *Fork, implement, test* - use dry-run modes extensively
+. *Submit PR* with documentation updates
+
+=== Prioritization Criteria
+
+Features are prioritized based on:
+
+* *Security impact* - Does it improve the security posture?
+* *User demand* - How many users are requesting it?
+* *Complexity* - What's the implementation effort?
+* *Maintainability* - Can it be maintained long-term?
+
+=== Non-Goals
+
+The following are explicitly out of scope:
+
+* GUI desktop environment changes beyond Qubes integration
+* Non-Qubes OS support
+* Proprietary software dependencies
+* Features requiring network access from vault
+* Complexity that compromises security
+
+== Version History
+
+[cols="1,2,2"]
+|===
+|Version |Date |Milestone
+
+|1.0.0
+|2024-11-22
+|Initial production release - complete feature set
+
+|2.0.0
+|TBD
+|Web-based configuration UI
+
+|3.0.0
+|TBD
+|Plugin system and automated security auditing
+|===
+
+== See Also
+
+* link:README.adoc[README.adoc] - Project overview
+* link:CHANGELOG.md[CHANGELOG.md] - Detailed change history
+* link:CONTRIBUTING.md[CONTRIBUTING.md] - Contribution guidelines
+
+---
+
+NOTE: This roadmap reflects community priorities. Features may be added, modified, or reprioritized based on contributor interest and security considerations.
+
+TIP: Want to work on a roadmap item? Open an issue to discuss your approach before starting implementation.

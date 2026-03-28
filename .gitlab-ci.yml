@@ -1,0 +1,316 @@
+# GitLab CI/CD Pipeline for Qubes SDP
+# RSR-compliant continuous integration
+
+stages:
+  - lint
+  - test
+  - security
+  - compliance
+  - build
+  - deploy
+
+variables:
+  GIT_DEPTH: 10
+
+# ============================================================================
+# Lint Stage
+# ============================================================================
+
+lint:shellcheck:
+  stage: lint
+  image: koalaman/shellcheck-alpine:stable
+  script:
+    - find . -name "*.sh" -type f -exec shellcheck {} +
+  allow_failure: true
+  artifacts:
+    reports:
+      codequality: gl-code-quality-report.json
+  only:
+    - branches
+    - merge_requests
+
+lint:syntax:
+  stage: lint
+  image: bash:latest
+  script:
+    - find . -name "*.sh" -type f -exec bash -n {} \;
+  only:
+    - branches
+    - merge_requests
+
+lint:markdown:
+  stage: lint
+  image: node:lts-alpine
+  before_script:
+    - npm install -g markdownlint-cli
+  script:
+    - markdownlint '**/*.md' --ignore node_modules
+  allow_failure: true
+  only:
+    - branches
+    - merge_requests
+
+# ============================================================================
+# Test Stage
+# ============================================================================
+
+test:unit:
+  stage: test
+  image: bash:latest
+  script:
+    - bash tests/unit-tests.sh
+  artifacts:
+    reports:
+      junit: test-results.xml
+  only:
+    - branches
+    - merge_requests
+
+test:integration:
+  stage: test
+  image: bash:latest
+  script:
+    - bash tests/integration-tests.sh
+  only:
+    - branches
+    - merge_requests
+
+test:syntax-all:
+  stage: test
+  image: bash:latest
+  script:
+    - bash tests/syntax-test.sh qubes-setup.sh
+    - bash tests/syntax-test.sh qubes-setup-advanced.sh
+    - for script in tools/*.sh; do bash tests/syntax-test.sh "$script"; done
+  only:
+    - branches
+    - merge_requests
+
+# ============================================================================
+# Security Stage
+# ============================================================================
+
+security:tests:
+  stage: security
+  image: bash:latest
+  script:
+    - bash tests/security-tests.sh
+  artifacts:
+    reports:
+      junit: security-results.xml
+  only:
+    - branches
+    - merge_requests
+
+security:secrets-scan:
+  stage: security
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache git grep
+  script:
+    - |
+      echo "Scanning for potential secrets..."
+      ! grep -rE '(password|passwd|pwd|secret|api[_-]?key)\s*=\s*["\047][^"\047]+["\047]' \
+        --exclude-dir=.git \
+        --exclude-dir=node_modules \
+        --exclude="*.md" \
+        . || (echo "Potential secrets found!"; exit 1)
+  only:
+    - branches
+    - merge_requests
+
+security:dependency-check:
+  stage: security
+  image: alpine:latest
+  script:
+    - |
+      echo "Checking for suspicious downloads..."
+      ! grep -r "curl.*|.*sh\|wget.*|.*sh" \
+        --include="*.sh" \
+        . || (echo "Potentially dangerous pipe to shell found!"; exit 1)
+  only:
+    - branches
+    - merge_requests
+
+# ============================================================================
+# Compliance Stage
+# ============================================================================
+
+compliance:rsr:
+  stage: compliance
+  image: bash:latest
+  script:
+    - bash scripts/rsr-verify.sh || true
+  artifacts:
+    paths:
+      - rsr-compliance-report.txt
+  only:
+    - branches
+    - merge_requests
+
+compliance:files:
+  stage: compliance
+  image: alpine:latest
+  script:
+    - |
+      echo "Checking required files..."
+      test -f README.md || (echo "Missing README.md"; exit 1)
+      test -f LICENSE || (echo "Missing LICENSE"; exit 1)
+      test -f SECURITY.md || (echo "Missing SECURITY.md"; exit 1)
+      test -f CODE_OF_CONDUCT.md || (echo "Missing CODE_OF_CONDUCT.md"; exit 1)
+      test -f CONTRIBUTING.md || (echo "Missing CONTRIBUTING.md"; exit 1)
+      test -f MAINTAINERS.md || (echo "Missing MAINTAINERS.md"; exit 1)
+      test -f CHANGELOG.md || (echo "Missing CHANGELOG.md"; exit 1)
+      test -f .well-known/security.txt || (echo "Missing security.txt"; exit 1)
+      test -f .well-known/ai.txt || (echo "Missing ai.txt"; exit 1)
+      test -f .well-known/humans.txt || (echo "Missing humans.txt"; exit 1)
+      echo "All required files present!"
+  only:
+    - branches
+    - merge_requests
+
+compliance:license:
+  stage: compliance
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache grep
+  script:
+    - |
+      echo "Verifying license headers..."
+      grep -q "MIT\|Palimpsest" LICENSE || \
+        (echo "License file missing required text"; exit 1)
+  only:
+    - branches
+    - merge_requests
+
+# ============================================================================
+# Build Stage
+# ============================================================================
+
+build:wiki:
+  stage: build
+  image: bash:latest
+  before_script:
+    - apk add --no-cache python3
+  script:
+    - cd wiki && bash build-wiki.sh
+  artifacts:
+    paths:
+      - wiki/html/
+    expire_in: 1 week
+  only:
+    - branches
+    - tags
+
+build:package:
+  stage: build
+  image: alpine:latest
+  script:
+    - |
+      mkdir -p dist
+      tar czf dist/qubes-sdp-${CI_COMMIT_TAG:-dev}.tar.gz \
+        --exclude=.git \
+        --exclude=dist \
+        --exclude=wiki/html \
+        .
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 month
+  only:
+    - tags
+    - main
+
+# ============================================================================
+# Deploy Stage
+# ============================================================================
+
+pages:
+  stage: deploy
+  dependencies:
+    - build:wiki
+  script:
+    - mkdir -p public
+    - cp -r wiki/html/* public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
+
+release:
+  stage: deploy
+  image: alpine:latest
+  dependencies:
+    - build:package
+  script:
+    - |
+      echo "Release ${CI_COMMIT_TAG} created"
+      echo "Package available: dist/qubes-sdp-${CI_COMMIT_TAG}.tar.gz"
+  artifacts:
+    paths:
+      - dist/
+  only:
+    - tags
+
+# ============================================================================
+# Nightly/Scheduled Jobs
+# ============================================================================
+
+nightly:security-scan:
+  stage: security
+  image: bash:latest
+  script:
+    - bash tests/security-tests.sh
+    - bash scripts/rsr-verify.sh
+  only:
+    - schedules
+  artifacts:
+    paths:
+      - security-scan-report.txt
+      - rsr-compliance-report.txt
+    expire_in: 30 days
+
+# ============================================================================
+# Manual Jobs
+# ============================================================================
+
+manual:full-test:
+  stage: test
+  image: bash:latest
+  script:
+    - bash tests/run-tests.sh
+  when: manual
+  allow_failure: false
+
+manual:deploy-docs:
+  stage: deploy
+  dependencies:
+    - build:wiki
+  script:
+    - echo "Deploying documentation..."
+    - mkdir -p public
+    - cp -r wiki/html/* public/
+  artifacts:
+    paths:
+      - public
+  when: manual
+  only:
+    - main
+
+# ============================================================================
+# Workflow Rules
+# ============================================================================
+
+workflow:
+  rules:
+    # Run on merge requests
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    # Run on main branch
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    # Run on tags
+    - if: '$CI_COMMIT_TAG'
+    # Run on schedules
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    # Don't run otherwise
+    - when: never
