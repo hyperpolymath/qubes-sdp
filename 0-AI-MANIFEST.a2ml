@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# 0-AI-MANIFEST.a2ml — AI Agent Entry Point
+# Repository: qubes-sdp
+# Owner: hyperpolymath
+
+(ai-manifest
+  (version "1.0")
+  (repository "qubes-sdp")
+  (owner "hyperpolymath")
+  (entry-points
+    (primary "README.adoc")
+    (machine-readable ".machine_readable/"))
+  (invariants
+    (scm-files-location ".machine_readable/ ONLY — never root")
+    (license "PMPL-1.0-or-later")
+    (github-is-source-of-truth #t)))
