@@ -96,9 +96,9 @@ echo
 echo -e "${BLUE}=== Build System ===${NC}"
 echo
 
-check "justfile exists" "[ -f justfile ]"
-check "justfile has setup recipes" "grep -q 'setup' justfile"
-check "justfile has test recipes" "grep -q 'test' justfile"
+check "justfile exists" "[ -f Justfile ]"
+check "justfile has setup recipes" "grep -q 'setup' Justfile"
+check "justfile has test recipes" "grep -q 'test' Justfile"
 check "flake.nix exists (Nix)" "[ -f flake.nix ]"
 check "Makefile exists" "[ -f Makefile.qubes ]"
 check "CI/CD configuration exists" "[ -f .gitlab-ci.yml ] || [ -f .github/workflows/*.yml ]"

@@ -77,7 +77,7 @@ This project adheres to the [Rhodium Standard Repository](https://github.com/hyp
 
 - ✅ **Comprehensive Documentation** - README, QUICKSTART, Wiki, CONTRIBUTING, SECURITY
 - ✅ **Governance** - CODE_OF_CONDUCT, MAINTAINERS, TPCF Perimeter 3
-- ✅ **Build Systems** - justfile, Makefile, Nix flake, CI/CD
+- ✅ **Build Systems** - Justfile, Makefile, Nix flake, CI/CD
 - ✅ **Security** - RFC 9116 security.txt, vulnerability disclosure, automated tests
 - ✅ **Emotional Safety** - Palimpsest license, reversibility, learning culture
 - ✅ **Offline-First** - Air-gapped operation capability

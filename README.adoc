@@ -243,7 +243,7 @@ Compliance includes:
 
 * Comprehensive documentation (README, QUICKSTART, Wiki, CONTRIBUTING, SECURITY)
 * Governance (CODE_OF_CONDUCT, MAINTAINERS, TPCF Perimeter 3)
-* Build systems (justfile, Makefile, Nix flake, CI/CD)
+* Build systems (Justfile, Makefile, Nix flake, CI/CD)
 * Security (RFC 9116 security.txt, vulnerability disclosure)
 * Emotional safety (Palimpsest license, reversibility, learning culture)
 * Offline-first capability
