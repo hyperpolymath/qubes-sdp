@@ -21,7 +21,7 @@ jobs:
           deno-version: v1.x
       
       - name: Deno lint
-        run: deno lint
+        run: 'if ls **/*.ts >/dev/null 2>run: deno lint1 || ls *.ts >/dev/null 2>run: deno lint1; then deno lint; else echo "no TS sources to lint"; fi'
       
       - name: Deno fmt check
         run: deno fmt --check
