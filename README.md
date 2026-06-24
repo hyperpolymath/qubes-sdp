@@ -1,6 +1,6 @@
 # Qubes SDP - Software Development Platform
 
-image:https://img.shields.io/badge/License-PMPL--1.0-blue.svg[License: PMPL-1.0,link="https://github.com/hyperpolymath/palimpsest-license"]
+image:https://img.shields.io/badge/License-MPL--2.0-blue.svg[License: PMPL-1.0,link="https://github.com/hyperpolymath/palimpsest-license"]
 [![Qubes OS](https://img.shields.io/badge/Qubes%20OS-4.1%2B-blue.svg)](https://www.qubes-os.org/)
 [![RSR Compliance](https://img.shields.io/badge/RSR-Gold-gold.svg)](scripts/rsr-verify.sh)
 [![TPCF](https://img.shields.io/badge/TPCF-Perimeter%203-green.svg)](CODE_OF_CONDUCT.md)
