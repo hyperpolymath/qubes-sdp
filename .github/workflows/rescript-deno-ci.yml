@@ -1,3 +1,4 @@
+# This workflow is managed by gh actions-lock.
 # SPDX-License-Identifier: MPL-2.0
 name: ReScript/Deno CI
 on:
@@ -18,8 +19,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
-      - uses: denoland/setup-deno@v2
+      - uses: actions/checkout@v7.0.1
+      - uses: denoland/setup-deno@v2.0.5
         with:
           deno-version: v1.x
       
@@ -45,8 +46,8 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
-      - uses: denoland/setup-deno@v2
+      - uses: actions/checkout@v7.0.1
+      - uses: denoland/setup-deno@v2.0.5
       - name: Check permissions
         run: |
           # Audit for dangerous permissions
