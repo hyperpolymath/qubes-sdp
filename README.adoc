@@ -202,10 +202,9 @@ bash tests/unit-tests.sh
 |`instant-sync.yml`
 |Automatic propagation to git forges
 
-|`npm-bun-blocker.yml`
+|`runtime-policy.yml`
 |Enforces no npm/bun policy
 
-|`ts-blocker.yml`
 |Enforces no TypeScript policy
 
 |`guix-nix-policy.yml`
