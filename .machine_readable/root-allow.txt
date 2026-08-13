@@ -1,2 +1,4 @@
 CLAUDE.md
 flake.nix
+
+.githooks/
