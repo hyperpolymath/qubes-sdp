@@ -69,7 +69,7 @@ for script in ../qubes-setup*.sh; do
         test_assert "${script_name} doesn't contain 'rm -rf /'" "! grep -q 'rm -rf /' \"${script}\""
 
         # Should not have eval of user input without validation
-        test_assert "${script_name} doesn't have unsafe eval" "! grep -E 'eval .*\\$[{]?[a-zA-Z_]+' \"${script}\" | grep -qv '#'"
+        test_assert "${script_name} doesn't have unsafe eval" "! grep -E 'eval .*\\\$[{]?[a-zA-Z_]+' \"${script}\" | grep -qv '#'"
 
         # Should check for dom0
         test_assert "${script_name} checks for dom0" "grep -q 'hostname.*dom0' \"${script}\""
