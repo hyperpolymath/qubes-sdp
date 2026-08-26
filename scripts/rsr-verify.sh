@@ -64,11 +64,11 @@ echo
 check "README.md exists" "[ -f README.md ]"
 check "README.md has content (>500 chars)" "[ \$(wc -c < README.md) -gt 500 ]"
 check "LICENSE exists" "[ -f LICENSE ]"
-check "SECURITY.md exists" "[ -f SECURITY.md ]"
-check "CONTRIBUTING.md exists" "[ -f CONTRIBUTING.md ]"
-check "CODE_OF_CONDUCT.md exists" "[ -f CODE_OF_CONDUCT.md ]"
-check "MAINTAINERS.md exists" "[ -f MAINTAINERS.md ]"
-check "CHANGELOG.md exists" "[ -f CHANGELOG.md ]"
+check "SECURITY.adoc exists" "[ -f SECURITY.adoc ]"
+check "CONTRIBUTING.adoc exists" "[ -f CONTRIBUTING.adoc ]"
+check "CODE_OF_CONDUCT.adoc exists" "[ -f CODE_OF_CONDUCT.adoc ]"
+check "MAINTAINERS.adoc exists" "[ -f MAINTAINERS.adoc ]"
+check "CHANGELOG.adoc exists" "[ -f CHANGELOG.adoc ]"
 
 echo
 
@@ -128,7 +128,7 @@ echo
 echo -e "${BLUE}=== Security ===${NC}"
 echo
 
-check "SECURITY.md has vulnerability reporting" "grep -qi 'report.*vulnerability' SECURITY.md"
+check "SECURITY.adoc has vulnerability reporting" "grep -qi 'report.*vulnerability' SECURITY.adoc"
 check "No hardcoded passwords in scripts" "! grep -rE '(password|passwd|pwd)[[:space:]]*=[[:space:]]*['\\''\"]?[^'\\''\"]' --include='*.sh' . | grep -v '^[[:space:]]*#'"
 check "No curl piped to shell" "! grep -rE 'curl.*\\|.*sh' --include='*.sh' --exclude='*-verify.sh' --exclude='security-tests.sh' ."
 check "Scripts check for dom0" "grep -q 'hostname.*dom0' qubes-setup.sh"
@@ -169,8 +169,8 @@ echo -e "${BLUE}=== TPCF Perimeter Designation ===${NC}"
 echo
 
 check "TPCF perimeter declared in README" "grep -qi 'tpcf\|perimeter.*3\|community sandbox' README.md"
-check "CODE_OF_CONDUCT mentions TPCF" "grep -qi 'tpcf\|tri-perimeter' CODE_OF_CONDUCT.md"
-check "Open contribution model" "grep -qi 'open.*contrib' CONTRIBUTING.md"
+check "CODE_OF_CONDUCT mentions TPCF" "grep -qi 'tpcf\|tri-perimeter' CODE_OF_CONDUCT.adoc"
+check "Open contribution model" "grep -qi 'open.*contrib' CONTRIBUTING.adoc"
 
 echo
 
@@ -181,10 +181,10 @@ echo
 echo -e "${BLUE}=== Emotional Safety ===${NC}"
 echo
 
-check "CODE_OF_CONDUCT has emotional safety section" "grep -qi 'emotional.*safety' CODE_OF_CONDUCT.md"
-check "Reversibility mentioned" "grep -qi 'revers' CODE_OF_CONDUCT.md"
-check "Learning culture emphasized" "grep -qi 'learning\|mistake.*opportunit' CODE_OF_CONDUCT.md"
-check "Inclusive language guidelines" "grep -qi 'inclusive.*language' CODE_OF_CONDUCT.md" "warning"
+check "CODE_OF_CONDUCT has emotional safety section" "grep -qi 'emotional.*safety' CODE_OF_CONDUCT.adoc"
+check "Reversibility mentioned" "grep -qi 'revers' CODE_OF_CONDUCT.adoc"
+check "Learning culture emphasized" "grep -qi 'learning\|mistake.*opportunit' CODE_OF_CONDUCT.adoc"
+check "Inclusive language guidelines" "grep -qi 'inclusive.*language' CODE_OF_CONDUCT.adoc" "warning"
 
 echo
 
@@ -197,7 +197,7 @@ echo
 
 check "README has clear structure" "grep -q '^## ' README.md"
 check "Documentation has examples" "grep -qi 'example' README.md"
-check "QUICKSTART guide exists" "[ -f QUICKSTART.md ]"
+check "QUICKSTART guide exists" "[ -f QUICKSTART.adoc ]"
 check "Troubleshooting guide exists" "[ -f wiki/pages/troubleshooting.md ] || grep -qi 'troubleshoot' README.md"
 
 echo
