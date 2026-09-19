@@ -65,7 +65,7 @@ check "README.md exists" "[ -f README.md ]"
 check "README.md has content (>500 chars)" "[ \$(wc -c < README.md) -gt 500 ]"
 check "LICENSE exists" "[ -f LICENSE ]"
 check "SECURITY.adoc exists" "[ -f SECURITY.adoc ]"
-check "CONTRIBUTING.adoc exists" "[ -f CONTRIBUTING.adoc ]"
+check "../.github/CONTRIBUTING.md exists" "[ -f ../.github/CONTRIBUTING.md ]"
 check "CODE_OF_CONDUCT.adoc exists" "[ -f CODE_OF_CONDUCT.adoc ]"
 check "MAINTAINERS.adoc exists" "[ -f MAINTAINERS.adoc ]"
 check "CHANGELOG.adoc exists" "[ -f CHANGELOG.adoc ]"
@@ -170,7 +170,7 @@ echo
 
 check "TPCF perimeter declared in README" "grep -qi 'tpcf\|perimeter.*3\|community sandbox' README.md"
 check "CODE_OF_CONDUCT mentions TPCF" "grep -qi 'tpcf\|tri-perimeter' CODE_OF_CONDUCT.adoc"
-check "Open contribution model" "grep -qi 'open.*contrib' CONTRIBUTING.adoc"
+check "Open contribution model" "grep -qi 'open.*contrib' ../.github/CONTRIBUTING.md"
 
 echo
 
