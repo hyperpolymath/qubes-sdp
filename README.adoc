@@ -400,7 +400,7 @@ sudo qubesctl state.apply qubes-sdp
 |link:examples/[Examples]
 |Example configurations
 
-|link:CONTRIBUTING.md[CONTRIBUTING.md]
+|link:.github/CONTRIBUTING.md[CONTRIBUTING.md]
 |Contribution guidelines
 
 |link:SECURITY.md[SECURITY.md]
@@ -449,7 +449,7 @@ We value:
 * *Reversibility* - All changes can be undone
 * *Emotional safety* - No shaming or gatekeeping
 
-See link:CONTRIBUTING.md[CONTRIBUTING.md] for details.
+See link:.github/CONTRIBUTING.md[CONTRIBUTING.md] for details.
 
 == License
 
