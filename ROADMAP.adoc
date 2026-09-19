@@ -380,7 +380,7 @@ The following are explicitly out of scope:
 
 * link:README.adoc[README.adoc] - Project overview
 * link:CHANGELOG.md[CHANGELOG.md] - Detailed change history
-* link:CONTRIBUTING.md[CONTRIBUTING.md] - Contribution guidelines
+* link:.github/CONTRIBUTING.md[CONTRIBUTING.md] - Contribution guidelines
 
 ---
 
