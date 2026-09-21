@@ -2,6 +2,10 @@
 version: 2
 updates:
   - package-ecosystem: "github-actions"
+    # Ruby is banned for this estate: bump the action, or delete it? Delete.
+    ignore:
+      - dependency-name: "ruby/setup-ruby"
+      - dependency-name: "actions/jekyll-build-pages"
     directory: "/"
     schedule:
       interval: "weekly"

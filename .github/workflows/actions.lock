@@ -12,12 +12,6 @@ workflows:
     '.github/workflows/hypatia-scan.yml': []
     '.github/workflows/instant-sync.yml':
         - 'peter-evans/repository-dispatch@v4.0.1'
-    '.github/workflows/jekyll-gh-pages.yml':
-        - 'actions/checkout@v7.0.1'
-        - 'actions/configure-pages@v6.0.0'
-        - 'actions/deploy-pages@v5.0.1'
-        - 'actions/jekyll-build-pages@v1.0.13'
-        - 'actions/upload-pages-artifact@v5.0.0'
     '.github/workflows/label-triage.yml': []
     '.github/workflows/labels.yml': []
     '.github/workflows/mirror.yml': []
@@ -50,11 +44,6 @@ dependencies:
         commit: 'sha1-368f82528645a54fb793d4d04e342629a3f51346'
         owner_id: 44036562
         repo_id: 438112499
-    'actions/jekyll-build-pages@v1.0.13':
-        ref: 'v1.0.13'
-        commit: 'sha1-44a6e6beabd48582f863aeeb6cb2151cc1716697'
-        owner_id: 44036562
-        repo_id: 438323626
     'actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f':
         ref: 'v7.0.0'
         commit: 'sha1-bbbca2ddaa5d8feaa63e36b76fdaad77386f024f'
