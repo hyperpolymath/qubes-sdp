@@ -1,0 +1,79 @@
+{
+  "title": "qubes-sdp",
+  "output": "_site",
+  "index_page": "index.html",
+  "copy": [
+    {
+      "from": "www/public",
+      "to": ".",
+      "required": false
+    },
+    {
+      "from": "www/.well-known",
+      "to": ".well-known",
+      "required": false
+    },
+    {
+      "from": "LICENSES",
+      "to": "LICENSES",
+      "required": false
+    },
+    {
+      "from": "contractiles",
+      "to": "contractiles",
+      "required": false
+    },
+    {
+      "from": "docs",
+      "to": "docs",
+      "required": false
+    },
+    {
+      "from": "examples",
+      "to": "examples",
+      "required": false
+    },
+    {
+      "from": "qubes-salt",
+      "to": "qubes-salt",
+      "required": false
+    },
+    {
+      "from": "src",
+      "to": "src",
+      "required": false
+    },
+    {
+      "from": "tools",
+      "to": "tools",
+      "required": false
+    },
+    {
+      "from": "wiki",
+      "to": "wiki",
+      "required": false
+    },
+    {
+      "from": "README.adoc",
+      "to": "README.adoc",
+      "required": false
+    }
+  ],
+  "listing": [
+    {
+      "root": "docs",
+      "label": "Documentation",
+      "match": [
+        ".adoc",
+        ".md"
+      ],
+      "link_target": "source"
+    }
+  ],
+  "nojekyll": true,
+  "notes": [
+    "Derived by scripts/estate-ruby-exit.mjs — review before merge.",
+    "index_page is hub/index.html when the repo publishes index.json: GitHub Pages",
+    "serves index.json for '/' if no index.html exists, and some consumers rely on it."
+  ]
+}

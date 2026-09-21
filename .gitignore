@@ -85,3 +85,6 @@ deps/
 .cache/
 build/
 dist/
+
+# Pages output
+/_site/
