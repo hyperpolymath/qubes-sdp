@@ -1214,6 +1214,11 @@ done
 # MAIN
 # ==============================================================================
 
+# Dispatch advanced setup or the requested rollback, validation, health-check,
+# or backup mode using parsed global options; takes no arguments. Initializes
+# logging with a per-user XDG state fallback, or /dev/null if unavailable, and
+# loads configuration as needed. Normal setup runs preflight checks, optionally
+# collects settings interactively, provisions qubes, and prints a summary.
 main() {
     # Initialize logging
     if [ "${LOG_FILE}" != "/dev/null" ]; then

@@ -411,6 +411,10 @@ done
 # MAIN EXECUTION
 # ==============================================================================
 
+# Run basic qube setup and validation, or validation only, using parsed options.
+# Takes no arguments; reads the global mode flags and LOG_FILE. Initializes
+# logging, falling back to per-user XDG state or /dev/null if necessary, then
+# runs the selected workflow and prints a completion or dry-run summary.
 main() {
     # Initialize log file
     if [ "${LOG_FILE}" != "/dev/null" ]; then
