@@ -414,7 +414,21 @@ done
 main() {
     # Initialize log file
     if [ "${LOG_FILE}" != "/dev/null" ]; then
-        touch "${LOG_FILE}" 2>/dev/null || LOG_FILE="/tmp/qubes-sdp-setup.log"
+        if ! touch "${LOG_FILE}" 2>/dev/null; then
+            # /var/log is root-owned, so a non-root run lands here. Fall back
+            # to per-user XDG state, never /tmp: a predictable world-writable
+            # path lets another local user pre-create the file (CWE-377), and
+            # this log is worth keeping to review afterwards, so it is not
+            # throwaway (no mktemp). If even that fails, log to /dev/null
+            # rather than aborting the whole setup run under `set -e`.
+            local state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/qubes-sdp"
+            if mkdir -p "${state_dir}" 2>/dev/null && chmod 0700 "${state_dir}" 2>/dev/null && touch "${state_dir}/setup.log" 2>/dev/null; then
+                LOG_FILE="${state_dir}/setup.log"
+            else
+                echo "WARNING: could not create a log file; continuing without one" >&2
+                LOG_FILE="/dev/null"
+            fi
+        fi
         log INFO "=== Qubes SDP Setup Script Started ==="
         log INFO "Log file: ${LOG_FILE}"
     fi
