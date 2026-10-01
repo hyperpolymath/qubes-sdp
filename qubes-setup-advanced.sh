@@ -33,6 +33,11 @@ MODIFIED_QUBES=()
 # LOGGING AND OUTPUT
 # ==============================================================================
 
+# Ensure the global LOG_FILE can be opened for append; takes no arguments.
+# On failure, select advanced-setup.log under XDG_STATE_HOME (defaulting to
+# $HOME/.local/state), with a mode-0700 qubes-sdp directory and umask 077 for
+# log creation. If that also fails, warn on stderr and set LOG_FILE=/dev/null.
+# An existing /dev/null selection is left alone.
 ensure_log_file() {
     if [ "${LOG_FILE}" != "/dev/null" ]; then
         if ! { : >> "${LOG_FILE}"; } 2>/dev/null; then
@@ -53,6 +58,9 @@ ensure_log_file() {
     fi
 }
 
+# Append a timestamped entry to LOG_FILE. Takes a level as the first argument
+# and joins the remaining arguments as the message. When VERBOSE is true
+# (the default), also print a colored, level-prefixed message to stdout.
 log() {
     local level=$1
     shift
@@ -104,6 +112,10 @@ error_exit() {
 # CONFIGURATION LOADING
 # ==============================================================================
 
+# Source the global CONFIG_FILE into the current shell; takes no arguments.
+# If the file is missing, call error_exit (which may roll back) and exit 1.
+# Default DRY_RUN, VERBOSE, and LOG_FILE, then ensure the configured log is
+# writable or select a fallback before logging successful configuration load.
 load_config() {
     if [ ! -f "${CONFIG_FILE}" ]; then
         error_exit "Configuration file not found: ${CONFIG_FILE}"
