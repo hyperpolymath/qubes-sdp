@@ -6,27 +6,32 @@ Common questions and answers about Qubes SDP.
 
 ### What is Qubes SDP?
 
-Qubes SDP (Software Development Platform) is an automated setup system for Qubes OS that creates a secure, isolated work environment with one command. It implements Qubes best practices by default and provides multiple deployment methods.
+Qubes SDP (Software Development Platform) is an automated setup system for Qubes
+OS that creates a secure, isolated work environment with one command. It
+implements Qubes best practices by default and provides multiple deployment
+methods.
 
 ### Why use Qubes SDP?
 
-* **Save time** - Automated setup vs manual configuration
-* **Best practices** - Security-focused defaults
-* **Consistency** - Reproducible configurations
-* **Flexibility** - Choose from presets or customize
-* **Documentation** - Comprehensive guides
+- **Save time** - Automated setup vs manual configuration
+- **Best practices** - Security-focused defaults
+- **Consistency** - Reproducible configurations
+- **Flexibility** - Choose from presets or customize
+- **Documentation** - Comprehensive guides
 
 ### Is Qubes SDP official?
 
-No, Qubes SDP is a community project, not officially part of Qubes OS. However, it follows official Qubes documentation and best practices.
+No, Qubes SDP is a community project, not officially part of Qubes OS. However,
+it follows official Qubes documentation and best practices.
 
 ### Is it safe?
 
 Yes, when used properly:
-* All scripts are open source for review
-* Dry-run mode lets you test before applying
-* Follows Qubes security best practices
-* Includes rollback capabilities
+
+- All scripts are open source for review
+- Dry-run mode lets you test before applying
+- Follows Qubes security best practices
+- Includes rollback capabilities
 
 **Always review scripts before running in dom0!**
 
@@ -42,21 +47,25 @@ See the **[Installation Guide](installation.html)**. Basic steps:
 
 ### Can I download directly to dom0?
 
-Technically yes, but **not recommended**. Qubes philosophy is to keep dom0 isolated. Transfer from a qube instead.
+Technically yes, but **not recommended**. Qubes philosophy is to keep dom0
+isolated. Transfer from a qube instead.
 
 ### Which templates do I need?
 
-By default, `fedora-40-minimal`. The script can auto-install missing templates, or you can specify alternatives in the config.
+By default, `fedora-40-minimal`. The script can auto-install missing templates,
+or you can specify alternatives in the config.
 
 ### How much RAM do I need?
 
-Minimum 8GB, recommended 16GB+. You can reduce memory allocations for each qube in the configuration.
+Minimum 8GB, recommended 16GB+. You can reduce memory allocations for each qube
+in the configuration.
 
 ## Configuration
 
 ### How do I customize the setup?
 
-Edit `qubes-config.conf` before running the advanced setup script. See **[Configuration Guide](configuration.html)**.
+Edit `qubes-config.conf` before running the advanced setup script. See
+**[Configuration Guide](configuration.html)**.
 
 ### Can I use different templates?
 
@@ -69,11 +78,12 @@ DEFAULT_TEMPLATE="debian-12-minimal"
 ### What are topology presets?
 
 Pre-configured setups optimized for specific use cases:
-* journalist
-* developer
-* researcher
-* teacher
-* pentester
+
+- journalist
+- developer
+- researcher
+- teacher
+- pentester
 
 Set `TOPOLOGY_PRESET` in the config.
 
@@ -119,7 +129,8 @@ qvm-open-in-dvm suspicious.pdf
 
 ### Why can't vault access the network?
 
-This is intentional! Vault is air-gapped for maximum security. Sensitive data should never touch the network.
+This is intentional! Vault is air-gapped for maximum security. Sensitive data
+should never touch the network.
 
 ## Troubleshooting
 
@@ -144,7 +155,8 @@ VAULT_MEMORY="512"
 
 ### "Network qube not found" error
 
-Ensure sys-firewall exists. If using sys-whonix, install Whonix or use the fallback:
+Ensure sys-firewall exists. If using sys-whonix, install Whonix or use the
+fallback:
 
 ```bash
 ANON_NETVM_FALLBACK="sys-firewall"
@@ -176,7 +188,8 @@ xl info | grep free_memory
 
 ### What is split-GPG?
 
-A Qubes feature where GPG keys are stored in an air-gapped qube (vault) but can be used from other qubes (work) via qrexec. Keys never leave vault.
+A Qubes feature where GPG keys are stored in an air-gapped qube (vault) but can
+be used from other qubes (work) via qrexec. Keys never leave vault.
 
 See **[Split-GPG Guide](split-gpg.html)**.
 
@@ -198,7 +211,8 @@ See **[VPN Setup](vpn-setup.html)**.
 
 ### What about Whonix?
 
-If sys-whonix is installed, the anon qube will use it automatically. Otherwise, it falls back to sys-firewall (less anonymous).
+If sys-whonix is installed, the anon qube will use it automatically. Otherwise,
+it falls back to sys-firewall (less anonymous).
 
 Install Whonix:
 
@@ -222,14 +236,15 @@ qvm-run vault 'ping -c 1 8.8.8.8'
 
 ### Can untrusted qube access my files?
 
-No, qubes are isolated. Files can only be transferred via explicit user action (qvm-copy) or qrexec policies.
+No, qubes are isolated. Files can only be transferred via explicit user action
+(qvm-copy) or qrexec policies.
 
 ### What if a qube gets compromised?
 
-* Other qubes remain protected (isolation)
-* Shutdown compromised qube
-* Remove and recreate from scratch
-* Restore from backup if needed
+- Other qubes remain protected (isolation)
+- Shutdown compromised qube
+- Remove and recreate from scratch
+- Restore from backup if needed
 
 ### Should I use encrypted backups?
 
@@ -276,8 +291,9 @@ See **[Backup & Restore](backup-restore.html)**.
 ### What should I backup?
 
 At minimum:
-* vault (sensitive data)
-* work (important files)
+
+- vault (sensitive data)
+- work (important files)
 
 Configure in:
 
@@ -297,10 +313,10 @@ BACKUP_QUBES="vault,work"
 
 ### How much disk space do I need?
 
-* Each qube: ~2-5GB
-* Templates: ~2-4GB each
-* Dom0: ~10GB
-* Backups: Variable
+- Each qube: ~2-5GB
+- Templates: ~2-4GB each
+- Dom0: ~10GB
+- Backups: Variable
 
 Minimum 50GB free recommended.
 
@@ -319,8 +335,9 @@ ENABLE_ANON="false"
 ### Which Qubes OS versions are supported?
 
 Tested on:
-* Qubes OS 4.1
-* Qubes OS 4.2
+
+- Qubes OS 4.1
+- Qubes OS 4.2
 
 Should work on 4.0+, but not tested.
 
@@ -345,14 +362,15 @@ VAULT_TEMPLATE="debian-12-minimal"
 
 ### What is Salt Stack mode?
 
-An alternative deployment method using Qubes' Salt configuration management. More declarative than bash scripts.
+An alternative deployment method using Qubes' Salt configuration management.
+More declarative than bash scripts.
 
 See `qubes-salt/README.md`.
 
 ### Should I use Salt or bash scripts?
 
-* **Salt**: Better for maintaining state, multiple systems
-* **Bash**: Better for one-time setup, more flexible
+- **Salt**: Better for maintaining state, multiple systems
+- **Bash**: Better for one-time setup, more flexible
 
 Both work equally well.
 
@@ -367,7 +385,8 @@ sudo qubesctl state.apply qubes-sdp
 
 ### How do I update Qubes SDP?
 
-Download new version, transfer to dom0, run setup again. Existing qubes won't be affected.
+Download new version, transfer to dom0, run setup again. Existing qubes won't be
+affected.
 
 ### How do I add a new qube?
 
@@ -417,7 +436,8 @@ Not running in dom0, or Qubes not properly installed.
 
 ### "Qube already exists"
 
-Expected behavior. Script skips existing qubes. Use clean-all to remove first, or ignore the warning.
+Expected behavior. Script skips existing qubes. Use clean-all to remove first,
+or ignore the warning.
 
 ### Dry-run mode hangs
 
@@ -433,10 +453,10 @@ Bug in progress indicator. Use `--quiet` flag:
 
 Yes! Contributions welcome:
 
-* Bug reports
-* Feature requests
-* Documentation improvements
-* Code contributions
+- Bug reports
+- Feature requests
+- Documentation improvements
+- Code contributions
 
 See **[Contributing Guide](contributing.html)**.
 
@@ -452,10 +472,10 @@ Yes! Edit `qubes-setup-advanced.sh` and add a new `apply_preset_*` function.
 
 ### Where can I get more help?
 
-* **[Troubleshooting Guide](troubleshooting.html)**
-* **[Qubes OS Documentation](https://www.qubes-os.org/doc/)**
-* **[Qubes OS Forum](https://forum.qubes-os.org/)**
-* Project issue tracker
+- **[Troubleshooting Guide](troubleshooting.html)**
+- **[Qubes OS Documentation](https://www.qubes-os.org/doc/)**
+- **[Qubes OS Forum](https://forum.qubes-os.org/)**
+- Project issue tracker
 
 ### How do I enable debug mode?
 
@@ -511,18 +531,18 @@ less /var/log/qubes-sdp-setup.log       # View logs
 
 ### Config File Locations
 
-* Setup scripts: `./qubes-setup*.sh`
-* Configuration: `./qubes-config.conf`
-* Salt states: `./qubes-salt/*.sls`
-* Logs: `/var/log/qubes-sdp-setup.log`
-* Installed: `/usr/local/bin/qubes-sdp/`
+- Setup scripts: `./qubes-setup*.sh`
+- Configuration: `./qubes-config.conf`
+- Salt states: `./qubes-salt/*.sls`
+- Logs: `/var/log/qubes-sdp-setup.log`
+- Installed: `/usr/local/bin/qubes-sdp/`
 
 ## Still Have Questions?
 
 Check the full documentation:
 
-* **[Getting Started](getting-started.html)**
-* **[Installation](installation.html)**
-* **[Configuration](configuration.html)**
-* **[Security Guide](security-guide.html)**
-* **[Troubleshooting](troubleshooting.html)**
+- **[Getting Started](getting-started.html)**
+- **[Installation](installation.html)**
+- **[Configuration](configuration.html)**
+- **[Security Guide](security-guide.html)**
+- **[Troubleshooting](troubleshooting.html)**

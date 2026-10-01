@@ -4,7 +4,8 @@ Complete guide to configuring Qubes SDP for your specific needs.
 
 ## Configuration File
 
-The main configuration file is `qubes-config.conf`. This file controls all aspects of your qube topology.
+The main configuration file is `qubes-config.conf`. This file controls all
+aspects of your qube topology.
 
 ### Configuration Structure
 
@@ -36,10 +37,11 @@ REQUIRED_TEMPLATES="fedora-40-minimal"
 ```
 
 **Supported templates**:
-* fedora-40-minimal
-* fedora-39-minimal
-* debian-12-minimal
-* debian-11-minimal
+
+- fedora-40-minimal
+- fedora-39-minimal
+- debian-12-minimal
+- debian-11-minimal
 
 ### Logging and Debugging
 
@@ -102,12 +104,12 @@ WORK_AUTOSTART="false"
 ```
 
 **Firewall Policies**:
-* `allow-all` - No restrictions (not recommended)
-* `deny-all` - Block all traffic
-* `custom` - Use WORK_ALLOWED_PORTS
 
-**Label Colors**:
-red, orange, yellow, green, blue, purple, gray, black
+- `allow-all` - No restrictions (not recommended)
+- `deny-all` - Block all traffic
+- `custom` - Use WORK_ALLOWED_PORTS
+
+**Label Colors**: red, orange, yellow, green, blue, purple, gray, black
 
 ### Vault Qube
 
@@ -125,7 +127,8 @@ VAULT_PACKAGES="vim keepassxc"
 VAULT_AUTOSTART="false"
 ```
 
-**Security Note**: NEVER set VAULT_NETVM to anything other than empty string. This ensures complete network isolation.
+**Security Note**: NEVER set VAULT_NETVM to anything other than empty string.
+This ensures complete network isolation.
 
 ### Anon Qube
 
@@ -144,7 +147,8 @@ ANON_PACKAGES="vim tor-browser"
 ANON_AUTOSTART="false"
 ```
 
-**Note**: If sys-whonix is not installed, automatically falls back to ANON_NETVM_FALLBACK.
+**Note**: If sys-whonix is not installed, automatically falls back to
+ANON_NETVM_FALLBACK.
 
 ### Untrusted Qube
 
@@ -185,6 +189,7 @@ VPN_CONFIG_FILE=""
 ```
 
 To use the VPN qube for other qubes:
+
 ```bash
 qvm-prefs work netvm vpn
 ```
@@ -252,9 +257,10 @@ ALLOW_WORK_VAULT_CLIPBOARD="ask"
 ```
 
 **Policy Options**:
-* `allow` - Always allow
-* `deny` - Always deny
-* `ask` - Prompt user each time
+
+- `allow` - Always allow
+- `deny` - Always deny
+- `ask` - Prompt user each time
 
 ## Topology Presets
 
@@ -268,29 +274,34 @@ TOPOLOGY_PRESET="custom"
 ### Available Presets
 
 **journalist**:
-* work + vault + anon + untrusted
-* Split-GPG enabled
-* Emphasis on source protection
+
+- work + vault + anon + untrusted
+- Split-GPG enabled
+- Emphasis on source protection
 
 **developer**:
-* work (4GB) + vault + untrusted
-* Split-SSH enabled
-* Development tools
+
+- work (4GB) + vault + untrusted
+- Split-SSH enabled
+- Development tools
 
 **researcher**:
-* work + vault + anon + untrusted + vpn
-* VPN qube for institutional access
-* Data protection focus
+
+- work + vault + anon + untrusted + vpn
+- VPN qube for institutional access
+- Data protection focus
 
 **teacher**:
-* work + vault + untrusted + usb
-* USB qube for devices
-* Usability focus
+
+- work + vault + untrusted + usb
+- USB qube for devices
+- Usability focus
 
 **pentester**:
-* All qubes enabled
-* High memory allocations
-* Security testing tools
+
+- All qubes enabled
+- High memory allocations
+- Security testing tools
 
 ## Advanced Firewall Configuration
 
@@ -503,6 +514,6 @@ xl info | grep free_memory
 
 ## Next Steps
 
-* **[Getting Started](getting-started.html)** - Run your first setup
-* **[Security Guide](security-guide.html)** - Harden configuration
-* **[Troubleshooting](troubleshooting.html)** - Common issues
+- **[Getting Started](getting-started.html)** - Run your first setup
+- **[Security Guide](security-guide.html)** - Harden configuration
+- **[Troubleshooting](troubleshooting.html)** - Common issues

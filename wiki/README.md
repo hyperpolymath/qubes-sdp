@@ -4,7 +4,8 @@ Comprehensive documentation for the Qubes Software Development Platform.
 
 ## Overview
 
-This wiki provides complete documentation for installing, configuring, and using Qubes SDP for secure, isolated work environments.
+This wiki provides complete documentation for installing, configuring, and using
+Qubes SDP for secure, isolated work environments.
 
 ## Building the Wiki
 
@@ -57,6 +58,7 @@ python3 -m http.server 8080
 ## Adding Pages
 
 1. Create new markdown file in `pages/`:
+
 ```bash
 vim pages/new-page.md
 ```
@@ -66,6 +68,7 @@ vim pages/new-page.md
 3. Add to navigation in `templates/page.html`
 
 4. Rebuild wiki:
+
 ```bash
 ./build-wiki.sh
 ```
@@ -76,7 +79,7 @@ The wiki builder supports:
 
 - Headings: `# H1`, `## H2`, etc.
 - Lists: `* item` or `1. item`
-- Code: `` `inline` `` or ` ```block``` `
+- Code: `` `inline` `` or `` ```block``` ``
 - Links: `[text](url)`
 - Emphasis: `*italic*` or `**bold**`
 

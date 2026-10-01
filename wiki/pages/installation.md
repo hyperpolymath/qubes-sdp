@@ -6,22 +6,23 @@ Complete installation instructions for Qubes SDP.
 
 ### System Requirements
 
-* **Qubes OS 4.1 or later** - Tested on 4.1 and 4.2
-* **dom0 access** - All scripts must run in dom0
-* **Sufficient RAM** - Minimum 8GB recommended (16GB+ ideal)
-* **Disk space** - At least 50GB free for qubes and templates
+- **Qubes OS 4.1 or later** - Tested on 4.1 and 4.2
+- **dom0 access** - All scripts must run in dom0
+- **Sufficient RAM** - Minimum 8GB recommended (16GB+ ideal)
+- **Disk space** - At least 50GB free for qubes and templates
 
 ### Required Knowledge
 
-* Basic Qubes OS concepts (qubes, templates, domains)
-* Comfort with command line interface
-* Understanding of VM management
+- Basic Qubes OS concepts (qubes, templates, domains)
+- Comfort with command line interface
+- Understanding of VM management
 
 ### Required Templates
 
 At minimum, you need:
-* **fedora-40-minimal** (default) OR
-* **debian-12-minimal**
+
+- **fedora-40-minimal** (default) OR
+- **debian-12-minimal**
 
 The setup script can automatically install missing templates.
 
@@ -29,7 +30,8 @@ The setup script can automatically install missing templates.
 
 ### Method 1: Direct Download to dom0
 
-**Warning**: Directly downloading to dom0 is generally discouraged. Use Method 2 or 3 instead.
+**Warning**: Directly downloading to dom0 is generally discouraged. Use Method 2
+or 3 instead.
 
 ```bash
 # Only if absolutely necessary
@@ -227,7 +229,8 @@ qvm-ls sys-firewall
 
 ### Whonix Not Available
 
-The setup automatically falls back to sys-firewall if sys-whonix isn't installed:
+The setup automatically falls back to sys-firewall if sys-whonix isn't
+installed:
 
 ```bash
 # To install Whonix:
@@ -330,6 +333,6 @@ sudo qubesctl state.show_top
 
 ## Additional Resources
 
-* [Qubes OS Installation Guide](https://www.qubes-os.org/doc/installation-guide/)
-* [Qubes OS Customization](https://www.qubes-os.org/doc/#customization-guides)
-* [Salt Stack for Qubes](https://www.qubes-os.org/doc/salt/)
+- [Qubes OS Installation Guide](https://www.qubes-os.org/doc/installation-guide/)
+- [Qubes OS Customization](https://www.qubes-os.org/doc/#customization-guides)
+- [Salt Stack for Qubes](https://www.qubes-os.org/doc/salt/)
