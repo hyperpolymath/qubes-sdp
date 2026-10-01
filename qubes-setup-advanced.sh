@@ -43,7 +43,7 @@ ensure_log_file() {
             # throwaway (no mktemp). If even that fails, log to /dev/null
             # rather than aborting the whole setup run under `set -e`.
             local state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/qubes-sdp"
-            if mkdir -p "${state_dir}" 2>/dev/null && chmod 0700 "${state_dir}" 2>/dev/null && { : >> "${state_dir}/advanced-setup.log"; } 2>/dev/null; then
+            if mkdir -p "${state_dir}" 2>/dev/null && chmod 0700 "${state_dir}" 2>/dev/null && (umask 077; : >> "${state_dir}/advanced-setup.log") 2>/dev/null; then
                 LOG_FILE="${state_dir}/advanced-setup.log"
             else
                 echo "WARNING: could not create a log file; continuing without one" >&2
