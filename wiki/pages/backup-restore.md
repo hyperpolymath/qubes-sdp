@@ -4,29 +4,29 @@ Complete guide to backing up and restoring your Qubes SDP environment.
 
 ## Why Backup?
 
-* **Data loss prevention** - Hardware failure, accidental deletion
-* **Disaster recovery** - System corruption, ransomware
-* **Migration** - Move to new hardware
-* **Testing** - Restore known-good state
-* **Compliance** - Data retention requirements
+- **Data loss prevention** - Hardware failure, accidental deletion
+- **Disaster recovery** - System corruption, ransomware
+- **Migration** - Move to new hardware
+- **Testing** - Restore known-good state
+- **Compliance** - Data retention requirements
 
 ## What to Backup
 
 ### Critical (Must backup)
 
-* **vault qube** - Contains sensitive data and keys
-* **work qube** - Your daily files and configuration
-* **Dom0 configuration** - Qube settings and policies
+- **vault qube** - Contains sensitive data and keys
+- **work qube** - Your daily files and configuration
+- **Dom0 configuration** - Qube settings and policies
 
 ### Optional (Recommended)
 
-* **Other qubes** - anon, untrusted (if customized)
-* **Templates** - If customized (otherwise reinstall)
+- **Other qubes** - anon, untrusted (if customized)
+- **Templates** - If customized (otherwise reinstall)
 
 ### Not Necessary
 
-* **Disposable VMs** - By design, nothing persistent
-* **Standard templates** - Can be reinstalled
+- **Disposable VMs** - By design, nothing persistent
+- **Standard templates** - Can be reinstalled
 
 ## Backup Methods
 
@@ -78,16 +78,19 @@ qvm-backup --all /var/backups/qubes-sdp/full-backup
 ### Backup Destination
 
 **Local (dom0)**:
+
 ```bash
 BACKUP_DEST="dom0:/var/backups/qubes-sdp"
 ```
 
 **External USB** (via sys-usb):
+
 ```bash
 BACKUP_DEST="sys-usb:/mnt/backup/qubes-sdp"
 ```
 
 **Network share** (NOT recommended - security risk):
+
 ```bash
 # Only if absolutely necessary
 BACKUP_DEST="backup-qube:/mnt/nas/qubes-sdp"
@@ -134,10 +137,11 @@ qvm-backup --passphrase-file - work vault /backup/location
 ```
 
 **Passphrase best practices**:
-* Use 20+ characters
-* Mix letters, numbers, symbols
-* Store securely (password manager in vault)
-* Don't reuse for other purposes
+
+- Use 20+ characters
+- Mix letters, numbers, symbols
+- Store securely (password manager in vault)
+- Don't reuse for other purposes
 
 ## Backup Process
 
@@ -264,71 +268,82 @@ qvm-block detach dom0 sys-usb:sda1
 ### Local Storage
 
 **Pros**:
-* Fast
-* Always available
-* No network dependency
+
+- Fast
+- Always available
+- No network dependency
 
 **Cons**:
-* Lost if hardware fails
-* Not protected from physical damage/theft
+
+- Lost if hardware fails
+- Not protected from physical damage/theft
 
 **Best for**: Daily/frequent backups
 
 ### External USB
 
 **Pros**:
-* Offline storage
-* Portable
-* Protected from system failures
+
+- Offline storage
+- Portable
+- Protected from system failures
 
 **Cons**:
-* Requires manual connection
-* Can be lost/stolen
-* Limited by USB capacity
+
+- Requires manual connection
+- Can be lost/stolen
+- Limited by USB capacity
 
 **Best for**: Weekly/monthly backups, archival
 
 ### Remote Storage
 
 **Pros**:
-* Offsite protection
-* Large capacity
-* Accessible from anywhere
+
+- Offsite protection
+- Large capacity
+- Accessible from anywhere
 
 **Cons**:
-* Security risk (network exposure)
-* Requires trust in provider
-* Slower transfer
+
+- Security risk (network exposure)
+- Requires trust in provider
+- Slower transfer
 
 **Best for**: Long-term archival (if properly encrypted)
 
-**Security**: Use encrypted cloud storage (Tresorit, SpiderOak) or encrypt locally first.
+**Security**: Use encrypted cloud storage (Tresorit, SpiderOak) or encrypt
+locally first.
 
 ## Backup Strategy
 
 ### 3-2-1 Rule
 
-* **3** copies of data (original + 2 backups)
-* **2** different media types (disk + USB)
-* **1** offsite copy (cloud/other location)
+- **3** copies of data (original + 2 backups)
+- **2** different media types (disk + USB)
+- **1** offsite copy (cloud/other location)
 
 ### Recommended Schedule
 
 **Daily**:
-* Automated backup to local disk
-* Vault and work qubes only
+
+- Automated backup to local disk
+- Vault and work qubes only
 
 **Weekly**:
-* Manual backup to USB drive
-* All customized qubes
+
+- Manual backup to USB drive
+- All customized qubes
 
 **Monthly**:
-* Full system backup
-* Store USB offsite
+
+- Full system backup
+- Store USB offsite
 
 **Before major changes**:
-* Manual backup
-* Test restore
+
+- Manual backup
+- Test restore
 
 ### Retention Policy
 
@@ -426,18 +441,21 @@ qvm-backup-restore /var/backups/qubes-sdp/backup-<date-before-infection>
 ### Backup Fails
 
 **Insufficient disk space**:
+
 ```bash
 df -h /var/backups
 # Free up space or use different destination
 ```
 
 **Qube not running**:
+
 ```bash
 qvm-start <qube>
 # Or backup will start it automatically
 ```
 
 **Permission denied**:
+
 ```bash
 # Check backup destination permissions
 ls -ld /var/backups/qubes-sdp
@@ -447,11 +465,13 @@ sudo chown user:user /var/backups/qubes-sdp
 ### Restore Fails
 
 **Wrong passphrase**:
-* Double-check passphrase
-* Try backup from different date
-* Check caps lock
+
+- Double-check passphrase
+- Try backup from different date
+- Check caps lock
 
 **Corrupted backup**:
+
 ```bash
 # Verify integrity
 qvm-backup-restore --verify /path/to/backup
@@ -460,6 +480,7 @@ qvm-backup-restore --verify /path/to/backup
 ```
 
 **Qube already exists**:
+
 ```bash
 # Remove existing qube first
 qvm-remove <qube>
@@ -527,31 +548,31 @@ rm -rf /tmp/backup-encrypted
 
 ### Daily
 
-* [ ] Automated backup ran successfully
-* [ ] Check log for errors
-* [ ] Verify disk space available
+- [ ] Automated backup ran successfully
+- [ ] Check log for errors
+- [ ] Verify disk space available
 
 ### Weekly
 
-* [ ] Manual backup to USB
-* [ ] Test restore of one qube
-* [ ] Verify backup integrity
-* [ ] Update passphrase rotation
+- [ ] Manual backup to USB
+- [ ] Test restore of one qube
+- [ ] Verify backup integrity
+- [ ] Update passphrase rotation
 
 ### Monthly
 
-* [ ] Full system backup
-* [ ] Test complete restore procedure
-* [ ] Store backup offsite
-* [ ] Review and update backup strategy
-* [ ] Clean up old backups
+- [ ] Full system backup
+- [ ] Test complete restore procedure
+- [ ] Store backup offsite
+- [ ] Review and update backup strategy
+- [ ] Clean up old backups
 
 ### Annually
 
-* [ ] Full disaster recovery test
-* [ ] Review and update documentation
-* [ ] Audit backup security
-* [ ] Update backup passphrases
+- [ ] Full disaster recovery test
+- [ ] Review and update documentation
+- [ ] Audit backup security
+- [ ] Update backup passphrases
 
 ## Tools and Utilities
 
@@ -568,12 +589,12 @@ bash tests/backup-restore-test.sh
 
 ## References
 
-* [Qubes Backup Documentation](https://www.qubes-os.org/doc/backup-restore/)
-* [Qubes Emergency Backup Recovery](https://www.qubes-os.org/doc/backup-emergency-restore/)
-* [Dom0 Backup](https://www.qubes-os.org/doc/backup-dom0/)
+- [Qubes Backup Documentation](https://www.qubes-os.org/doc/backup-restore/)
+- [Qubes Emergency Backup Recovery](https://www.qubes-os.org/doc/backup-emergency-restore/)
+- [Dom0 Backup](https://www.qubes-os.org/doc/backup-dom0/)
 
 ## Next Steps
 
-* **[Security Guide](security-guide.html)** - Protect your backups
-* **[Configuration](configuration.html)** - Set up automated backups
-* **[Troubleshooting](troubleshooting.html)** - Backup issues
+- **[Security Guide](security-guide.html)** - Protect your backups
+- **[Configuration](configuration.html)** - Set up automated backups
+- **[Troubleshooting](troubleshooting.html)** - Backup issues

@@ -15,28 +15,32 @@ Qubes SDP implements several core security principles:
 ## Qube Trust Levels
 
 ### Vault (Highest Trust)
-* **Network**: None (air-gapped)
-* **Purpose**: Sensitive data storage
-* **Threats**: Physical access, side channels
-* **Mitigations**: No network, encrypted storage
+
+- **Network**: None (air-gapped)
+- **Purpose**: Sensitive data storage
+- **Threats**: Physical access, side channels
+- **Mitigations**: No network, encrypted storage
 
 ### Work (Medium Trust)
-* **Network**: Restricted (HTTP/HTTPS/DNS only)
-* **Purpose**: Daily activities
-* **Threats**: Network attacks, malicious websites
-* **Mitigations**: Firewall rules, minimal template
+
+- **Network**: Restricted (HTTP/HTTPS/DNS only)
+- **Purpose**: Daily activities
+- **Threats**: Network attacks, malicious websites
+- **Mitigations**: Firewall rules, minimal template
 
 ### Anon (Low Trust)
-* **Network**: Tor only (via sys-whonix)
-* **Purpose**: Anonymous communications
-* **Threats**: Traffic analysis, Tor vulnerabilities
-* **Mitigations**: Whonix isolation, no persistent data
+
+- **Network**: Tor only (via sys-whonix)
+- **Purpose**: Anonymous communications
+- **Threats**: Traffic analysis, Tor vulnerabilities
+- **Mitigations**: Whonix isolation, no persistent data
 
 ### Untrusted (Lowest Trust)
-* **Network**: Full internet (sys-firewall)
-* **Purpose**: Risky downloads, testing
-* **Threats**: Malware, exploits
-* **Mitigations**: Disposable VMs, no valuable data
+
+- **Network**: Full internet (sys-firewall)
+- **Purpose**: Risky downloads, testing
+- **Threats**: Malware, exploits
+- **Mitigations**: Disposable VMs, no valuable data
 
 ## Firewall Configuration
 
@@ -189,9 +193,9 @@ qubes-gpg-client --encrypt --recipient user@example.com file.txt
 
 ### Security Notes
 
-* GPG keys never leave vault
-* Each operation requires user confirmation
-* Keys protected even if work qube compromised
+- GPG keys never leave vault
+- Each operation requires user confirmation
+- Keys protected even if work qube compromised
 
 ## Split-SSH Security
 
@@ -216,9 +220,9 @@ ssh user@example.com
 
 ### Security Notes
 
-* SSH keys stored in air-gapped vault
-* Agent forwarding via qrexec
-* User confirmation required
+- SSH keys stored in air-gapped vault
+- Agent forwarding via qrexec
+- User confirmation required
 
 ## Qrexec Policies
 
@@ -294,10 +298,10 @@ qvm-open-in-dvm suspicious-file.pdf
 
 ### DisposableVM Security
 
-* Fresh VM for each use
-* No persistent storage
-* Destroyed after use
-* Isolated from other qubes
+- Fresh VM for each use
+- No persistent storage
+- Destroyed after use
+- Isolated from other qubes
 
 ## Monitoring and Auditing
 
@@ -371,27 +375,27 @@ qvm-run -u root <template> 'systemctl disable <service>'
 
 ### Malware
 
-* **Prevention**: Untrusted qube for risky files
-* **Detection**: Scan in untrusted before opening in work
-* **Containment**: Disposable VMs prevent persistence
+- **Prevention**: Untrusted qube for risky files
+- **Detection**: Scan in untrusted before opening in work
+- **Containment**: Disposable VMs prevent persistence
 
 ### Network Attacks
 
-* **Prevention**: Firewall rules, minimal exposure
-* **Detection**: Monitor logs for anomalies
-* **Containment**: Qube isolation limits scope
+- **Prevention**: Firewall rules, minimal exposure
+- **Detection**: Monitor logs for anomalies
+- **Containment**: Qube isolation limits scope
 
 ### Physical Access
 
-* **Prevention**: Full disk encryption
-* **Detection**: Boot intrusion detection
-* **Containment**: Vault air-gap protects sensitive data
+- **Prevention**: Full disk encryption
+- **Detection**: Boot intrusion detection
+- **Containment**: Vault air-gap protects sensitive data
 
 ### Side Channels
 
-* **Prevention**: Separate qubes for different tasks
-* **Detection**: Difficult, rely on isolation
-* **Containment**: Air-gap for most sensitive data
+- **Prevention**: Separate qubes for different tasks
+- **Detection**: Difficult, rely on isolation
+- **Containment**: Air-gap for most sensitive data
 
 ## Incident Response
 
@@ -432,30 +436,30 @@ less /var/log/qubes-sdp-setup.log
 
 ### Daily
 
-* [ ] Check qube states (nothing unexpected running)
-* [ ] Review qrexec policy prompts
-* [ ] Verify vault has no network
+- [ ] Check qube states (nothing unexpected running)
+- [ ] Review qrexec policy prompts
+- [ ] Verify vault has no network
 
 ### Weekly
 
-* [ ] Update templates
-* [ ] Review logs for anomalies
-* [ ] Test backups
-* [ ] Check firewall rules
+- [ ] Update templates
+- [ ] Review logs for anomalies
+- [ ] Test backups
+- [ ] Check firewall rules
 
 ### Monthly
 
-* [ ] Full security audit
-* [ ] Review and update policies
-* [ ] Test disaster recovery
-* [ ] Update Qubes OS
+- [ ] Full security audit
+- [ ] Review and update policies
+- [ ] Test disaster recovery
+- [ ] Update Qubes OS
 
 ### Quarterly
 
-* [ ] Review threat model
-* [ ] Update documentation
-* [ ] Security training
-* [ ] Penetration testing (if applicable)
+- [ ] Review threat model
+- [ ] Update documentation
+- [ ] Security training
+- [ ] Penetration testing (if applicable)
 
 ## Best Practices
 
@@ -472,13 +476,13 @@ less /var/log/qubes-sdp-setup.log
 
 ## References
 
-* [Qubes OS Security](https://www.qubes-os.org/doc/security/)
-* [Qubes Security Guidelines](https://www.qubes-os.org/doc/security-guidelines/)
-* [Qubes Split-GPG](https://www.qubes-os.org/doc/split-gpg/)
-* [Qubes Firewall](https://www.qubes-os.org/doc/firewall/)
+- [Qubes OS Security](https://www.qubes-os.org/doc/security/)
+- [Qubes Security Guidelines](https://www.qubes-os.org/doc/security-guidelines/)
+- [Qubes Split-GPG](https://www.qubes-os.org/doc/split-gpg/)
+- [Qubes Firewall](https://www.qubes-os.org/doc/firewall/)
 
 ## Next Steps
 
-* **[Split-GPG Guide](split-gpg.html)** - Secure email signing
-* **[Backup & Restore](backup-restore.html)** - Data protection
-* **[Troubleshooting](troubleshooting.html)** - Common security issues
+- **[Split-GPG Guide](split-gpg.html)** - Secure email signing
+- **[Backup & Restore](backup-restore.html)** - Data protection
+- **[Troubleshooting](troubleshooting.html)** - Common security issues

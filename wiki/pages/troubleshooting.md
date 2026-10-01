@@ -9,6 +9,7 @@ Solutions to common issues with Qubes SDP.
 **Problem**: `bash: ./qubes-setup.sh: Permission denied`
 
 **Solution**:
+
 ```bash
 chmod +x qubes-setup.sh
 chmod +x qubes-setup-advanced.sh
@@ -21,16 +22,19 @@ chmod +x qubes-setup-advanced.sh
 **Solutions**:
 
 1. Install template manually:
+
 ```bash
 qubes-dom0-update --enablerepo=qubes-templates-itl fedora-40-minimal
 ```
 
 2. Enable auto-install in config:
+
 ```bash
 AUTO_INSTALL_TEMPLATES="true"
 ```
 
 3. Use different template:
+
 ```bash
 DEFAULT_TEMPLATE="debian-12-minimal"
 ```
@@ -42,6 +46,7 @@ DEFAULT_TEMPLATE="debian-12-minimal"
 **Solutions**:
 
 1. Reduce memory allocations in config:
+
 ```bash
 WORK_MEMORY="1024"
 VAULT_MEMORY="512"
@@ -49,11 +54,13 @@ ANON_MEMORY="512"
 ```
 
 2. Close running qubes:
+
 ```bash
 qvm-shutdown --all
 ```
 
 3. Check available memory:
+
 ```bash
 xl info | grep free_memory
 ```
@@ -65,11 +72,13 @@ xl info | grep free_memory
 **Solution**:
 
 1. Verify sys-firewall exists:
+
 ```bash
 qvm-ls sys-firewall
 ```
 
 2. If missing, create it via Qubes Manager or:
+
 ```bash
 qvm-create --label red --property netvm=sys-net sys-firewall
 qvm-prefs sys-firewall provides_network true
@@ -96,17 +105,20 @@ qubes-dom0-update --enablerepo=qubes-templates-community whonix-gateway-17 whoni
 **Solutions**:
 
 1. Verify config file path:
+
 ```bash
 ls -l qubes-config.conf
 ```
 
 2. Check syntax:
+
 ```bash
 bash -n qubes-config.conf
 source qubes-config.conf
 ```
 
 3. Specify config explicitly:
+
 ```bash
 ./qubes-setup-advanced.sh --config ./qubes-config.conf
 ```
@@ -118,6 +130,7 @@ source qubes-config.conf
 **Solutions**:
 
 1. Check for typos:
+
 ```bash
 # Correct
 ENABLE_WORK="true"
@@ -128,12 +141,14 @@ ENABLE_WORK="True"  # Wrong case
 ```
 
 2. Validate boolean values:
+
 ```bash
 # Valid: "true" or "false"
 # Invalid: "yes", "no", "1", "0"
 ```
 
 3. Check memory values are numbers:
+
 ```bash
 WORK_MEMORY="2048"  # Correct
 WORK_MEMORY="2GB"   # Wrong
@@ -148,28 +163,33 @@ WORK_MEMORY="2GB"   # Wrong
 **Solutions**:
 
 1. Check qube state:
+
 ```bash
 qvm-ls work
 ```
 
 2. Check memory:
+
 ```bash
 qvm-prefs work memory
 xl info | grep free_memory
 ```
 
 3. Check logs:
+
 ```bash
 journalctl -u qubes-vm@work
 ```
 
 4. Force shutdown and restart:
+
 ```bash
 qvm-kill work
 qvm-start work
 ```
 
 5. Check template:
+
 ```bash
 qvm-prefs work template
 qvm-ls <template>
@@ -182,22 +202,26 @@ qvm-ls <template>
 **Solutions**:
 
 1. Check firewall rules:
+
 ```bash
 qvm-firewall work list
 ```
 
 2. Verify DNS is allowed:
+
 ```bash
 qvm-firewall work add action=accept proto=udp dstport=53
 ```
 
 3. Test connectivity:
+
 ```bash
 qvm-run work 'ping -c 1 8.8.8.8'
 qvm-run work 'curl -I https://www.example.com'
 ```
 
 4. Temporarily allow all (for testing):
+
 ```bash
 qvm-firewall work reset
 # Then add back rules one by one
@@ -210,16 +234,19 @@ qvm-firewall work reset
 **Solutions**:
 
 1. Verify vault exists:
+
 ```bash
 qvm-ls vault
 ```
 
 2. Check qrexec policy:
+
 ```bash
 cat /etc/qubes-rpc/policy/qubes.Filecopy | grep vault
 ```
 
 3. Use correct command:
+
 ```bash
 # From work qube GUI: Right-click → "Copy to other AppVM" → vault
 # Or command line:
@@ -227,6 +254,7 @@ qvm-copy-to-vm vault /path/to/file
 ```
 
 4. Check vault has space:
+
 ```bash
 qvm-run vault 'df -h'
 ```
@@ -238,11 +266,13 @@ qvm-run vault 'df -h'
 **Solution**:
 
 1. Immediately disconnect:
+
 ```bash
 qvm-prefs vault netvm ''
 ```
 
 2. Verify:
+
 ```bash
 qvm-prefs vault netvm
 # Should show: (empty)
@@ -252,6 +282,7 @@ qvm-run vault 'ping -c 1 8.8.8.8'
 ```
 
 3. Check config:
+
 ```bash
 grep VAULT_NETVM qubes-config.conf
 # Should be: VAULT_NETVM=""
@@ -266,22 +297,26 @@ grep VAULT_NETVM qubes-config.conf
 **Solutions**:
 
 1. Check disk space:
+
 ```bash
 df -h /var/backups
 ```
 
 2. Verify backup destination exists:
+
 ```bash
 mkdir -p /var/backups/qubes-sdp
 ```
 
 3. Check qube state (must be running):
+
 ```bash
 qvm-start work
 qvm-start vault
 ```
 
 4. Use manual backup:
+
 ```bash
 qvm-backup work vault /var/backups/qubes-sdp/manual-backup
 ```
@@ -293,21 +328,25 @@ qvm-backup work vault /var/backups/qubes-sdp/manual-backup
 **Solutions**:
 
 1. Verify backup file exists:
+
 ```bash
 ls -l /var/backups/qubes-sdp/
 ```
 
 2. Check backup integrity:
+
 ```bash
 qvm-backup-restore --verify /var/backups/qubes-sdp/backup-*
 ```
 
 3. List backup contents:
+
 ```bash
 qvm-backup-restore --list /var/backups/qubes-sdp/backup-*
 ```
 
 4. Restore specific qube:
+
 ```bash
 qvm-backup-restore /var/backups/qubes-sdp/backup-* --include vault
 ```
@@ -321,27 +360,32 @@ qvm-backup-restore /var/backups/qubes-sdp/backup-* --include vault
 **Solutions**:
 
 1. Verify split-GPG is configured:
+
 ```bash
 grep SPLIT_GPG qubes-config.conf
 ```
 
 2. Check qrexec policy:
+
 ```bash
 cat /etc/qubes-rpc/policy/qubes.Gpg
 ```
 
 3. Verify vault is running:
+
 ```bash
 qvm-start vault
 ```
 
 4. Set GPG domain in work qube:
+
 ```bash
 export QUBES_GPG_DOMAIN=vault
 echo 'export QUBES_GPG_DOMAIN=vault' >> ~/.bashrc
 ```
 
 5. Test:
+
 ```bash
 qubes-gpg-client --list-keys
 ```
@@ -362,6 +406,7 @@ gpg --import /path/to/private-key.asc
 ```
 
 Then use from work:
+
 ```bash
 qubes-gpg-client --list-keys
 ```
@@ -375,22 +420,26 @@ qubes-gpg-client --list-keys
 **Solutions**:
 
 1. Verify configuration:
+
 ```bash
 grep SPLIT_SSH qubes-config.conf
 ```
 
 2. Check keys exist in vault:
+
 ```bash
 qvm-run vault 'ls ~/.ssh/'
 ```
 
 3. Set SSH_AUTH_SOCK in work:
+
 ```bash
 export SSH_AUTH_SOCK=~/.SSH_AGENT_vault
 echo 'export SSH_AUTH_SOCK=~/.SSH_AGENT_vault' >> ~/.bashrc
 ```
 
 4. Start vault:
+
 ```bash
 qvm-start vault
 ```
@@ -402,28 +451,33 @@ qvm-start vault
 **Solutions**:
 
 1. Reduce running qubes:
+
 ```bash
 qvm-shutdown <unused-qubes>
 ```
 
 2. Increase memory allocation:
+
 ```bash
 qvm-prefs work memory 4096
 ```
 
 3. Use minimal templates:
+
 ```bash
 # Switch to minimal template
 qvm-prefs work template fedora-40-minimal
 ```
 
 4. Check dom0 resources:
+
 ```bash
 free -h
 top
 ```
 
 5. Disable unnecessary services:
+
 ```bash
 qvm-service work cups off
 qvm-service work network-manager off
@@ -434,24 +488,28 @@ qvm-service work network-manager off
 **Solutions**:
 
 1. Remove old templates:
+
 ```bash
 qvm-template list --installed
 qvm-template remove <old-template>
 ```
 
 2. Clean package cache in templates:
+
 ```bash
 qvm-run -u root <template> 'dnf clean all'  # Fedora
 qvm-run -u root <template> 'apt-get clean'  # Debian
 ```
 
 3. Remove old backups:
+
 ```bash
 ls -lh /var/backups/qubes-sdp/
 rm /var/backups/qubes-sdp/old-backup-*
 ```
 
 4. Trim disk:
+
 ```bash
 qvm-trim-template <template>
 qvm-volume revert <qube>:private
@@ -466,11 +524,13 @@ qvm-volume revert <qube>:private
 **Solutions**:
 
 1. Check template is running:
+
 ```bash
 qvm-start <template>
 ```
 
 2. Update manually:
+
 ```bash
 # Fedora
 qvm-run -u root <template> 'dnf update -y'
@@ -480,11 +540,13 @@ qvm-run -u root <template> 'apt-get update && apt-get upgrade -y'
 ```
 
 3. Check network in template:
+
 ```bash
 qvm-run <template> 'ping -c 1 8.8.8.8'
 ```
 
 4. Set netvm if missing:
+
 ```bash
 qvm-prefs <template> netvm sys-firewall
 ```
@@ -496,16 +558,19 @@ qvm-prefs <template> netvm sys-firewall
 **Solutions**:
 
 1. Check network:
+
 ```bash
 ping -c 1 8.8.8.8
 ```
 
 2. Clear cache:
+
 ```bash
 sudo qubes-dom0-update --clean
 ```
 
 3. Try different mirror:
+
 ```bash
 sudo qubes-dom0-update --enablerepo=qubes-dom0-current-testing
 ```
@@ -534,11 +599,13 @@ qvm-remove untrusted
 **Solution**:
 
 Force remove:
+
 ```bash
 qvm-remove --force <qube-name>
 ```
 
 Or use make:
+
 ```bash
 make -f Makefile.qubes clean-all
 ```
@@ -633,9 +700,9 @@ When reporting issues, include:
 
 ### Community Support
 
-* [Qubes OS Forum](https://forum.qubes-os.org/)
-* [Qubes OS Mailing Lists](https://www.qubes-os.org/support/)
-* Project issue tracker
+- [Qubes OS Forum](https://forum.qubes-os.org/)
+- [Qubes OS Mailing Lists](https://www.qubes-os.org/support/)
+- Project issue tracker
 
 ## Common Error Messages
 
@@ -658,6 +725,7 @@ Reduce memory allocations or close running qubes.
 ### "Template has updates available"
 
 Update template before creating qubes:
+
 ```bash
 make -f Makefile.qubes template-update
 ```
@@ -665,33 +733,38 @@ make -f Makefile.qubes template-update
 ## Prevention Tips
 
 1. **Always dry-run first**
+
 ```bash
 ./qubes-setup-advanced.sh --dry-run
 ```
 
 2. **Validate before applying**
+
 ```bash
 ./qubes-setup-advanced.sh --validate
 ```
 
 3. **Keep backups current**
+
 ```bash
 make -f Makefile.qubes backup
 ```
 
 4. **Review logs regularly**
+
 ```bash
 less /var/log/qubes-sdp-setup.log
 ```
 
 5. **Update regularly**
+
 ```bash
 make -f Makefile.qubes template-update
 ```
 
 ## Still Stuck?
 
-* Review the **[FAQ](faq.html)**
-* Check the **[Configuration Guide](configuration.html)**
-* Read the **[Security Guide](security-guide.html)**
-* Consult [Qubes OS Documentation](https://www.qubes-os.org/doc/)
+- Review the **[FAQ](faq.html)**
+- Check the **[Configuration Guide](configuration.html)**
+- Read the **[Security Guide](security-guide.html)**
+- Consult [Qubes OS Documentation](https://www.qubes-os.org/doc/)

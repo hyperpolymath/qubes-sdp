@@ -1,15 +1,17 @@
 # Getting Started with Qubes SDP
 
-Welcome to the Qubes Software Development Platform! This guide will help you get started with automated qube setup and management.
+Welcome to the Qubes Software Development Platform! This guide will help you get
+started with automated qube setup and management.
 
 ## What is Qubes SDP?
 
-Qubes SDP is an automated configuration system for Qubes OS that creates secure, isolated work environments with minimal effort. It provides:
+Qubes SDP is an automated configuration system for Qubes OS that creates secure,
+isolated work environments with minimal effort. It provides:
 
-* **One-command setup** - Deploy your entire qube topology instantly
-* **Security-focused** - Implements Qubes best practices by default
-* **Flexible configuration** - Choose from presets or customize everything
-* **Multiple deployment methods** - Bash scripts or Salt Stack
+- **One-command setup** - Deploy your entire qube topology instantly
+- **Security-focused** - Implements Qubes best practices by default
+- **Flexible configuration** - Choose from presets or customize everything
+- **Multiple deployment methods** - Bash scripts or Salt Stack
 
 ## Quick Start
 
@@ -27,10 +29,11 @@ chmod +x qubes-setup.sh
 ```
 
 This creates four qubes:
-* **work** - General work environment (2GB RAM, firewall-restricted)
-* **vault** - Air-gapped sensitive data storage (NO NETWORK)
-* **anon** - Anonymous communications via Tor
-* **untrusted** - Disposable environment for risky activities
+
+- **work** - General work environment (2GB RAM, firewall-restricted)
+- **vault** - Air-gapped sensitive data storage (NO NETWORK)
+- **anon** - Anonymous communications via Tor
+- **untrusted** - Disposable environment for risky activities
 
 ### Method 2: Advanced Setup (Full customization)
 
@@ -67,34 +70,39 @@ make -f Makefile.qubes setup-preset-journalist
 Choose a preset based on your use case:
 
 ### Journalist
-* work + vault + anon + untrusted qubes
-* Split-GPG enabled for secure communications
-* File transfer policies configured
-* Emphasis on anonymity and source protection
+
+- work + vault + anon + untrusted qubes
+- Split-GPG enabled for secure communications
+- File transfer policies configured
+- Emphasis on anonymity and source protection
 
 ### Developer
-* work (4GB RAM) + vault + untrusted qubes
-* Split-SSH enabled for secure key management
-* Additional development tools installed
-* Emphasis on code security
+
+- work (4GB RAM) + vault + untrusted qubes
+- Split-SSH enabled for secure key management
+- Additional development tools installed
+- Emphasis on code security
 
 ### Researcher
-* work + vault + anon + untrusted + VPN qubes
-* VPN qube for institutional access
-* Tools for secure data collection
-* Emphasis on data protection
+
+- work + vault + anon + untrusted + VPN qubes
+- VPN qube for institutional access
+- Tools for secure data collection
+- Emphasis on data protection
 
 ### Teacher
-* work + vault + untrusted + USB qubes
-* USB qube for device management
-* Emphasis on usability
+
+- work + vault + untrusted + USB qubes
+- USB qube for device management
+- Emphasis on usability
 
 ### Pentester
-* All qubes enabled
-* 4GB RAM for work qube
-* Split-GPG and split-SSH
-* Security testing tools
-* Emphasis on isolation
+
+- All qubes enabled
+- 4GB RAM for work qube
+- Split-GPG and split-SSH
+- Security testing tools
+- Emphasis on isolation
 
 ## Verifying Your Setup
 
@@ -125,11 +133,13 @@ qvm-firewall work list
 ## Common First Tasks
 
 ### Start a qube
+
 ```bash
 qvm-start work
 ```
 
 ### Copy files to vault
+
 ```bash
 # From work qube, right-click file and select "Copy to vault"
 # Or use command line:
@@ -137,38 +147,41 @@ qvm-copy-to-vm vault /path/to/file
 ```
 
 ### Create a disposable VM
+
 ```bash
 qvm-run --dispvm untrusted firefox
 ```
 
 ### Check system status
+
 ```bash
 make -f Makefile.qubes status
 ```
 
 ## Getting Help
 
-* **[FAQ](faq.html)** - Frequently asked questions
-* **[Troubleshooting](troubleshooting.html)** - Common issues
-* **[Qubes OS Documentation](https://www.qubes-os.org/doc/)** - Official docs
+- **[FAQ](faq.html)** - Frequently asked questions
+- **[Troubleshooting](troubleshooting.html)** - Common issues
+- **[Qubes OS Documentation](https://www.qubes-os.org/doc/)** - Official docs
 
 ## Understanding the Architecture
 
 Qubes SDP creates a secure topology based on domain isolation:
 
-* **work**: Your daily driver with controlled internet access
-* **vault**: Air-gapped storage, no network access ever
-* **anon**: Routes through Tor for anonymous communications
-* **untrusted**: Disposable, assume everything is malicious
+- **work**: Your daily driver with controlled internet access
+- **vault**: Air-gapped storage, no network access ever
+- **anon**: Routes through Tor for anonymous communications
+- **untrusted**: Disposable, assume everything is malicious
 
 Each qube runs on a minimal template to reduce attack surface.
 
 ## Safety Features
 
-* **Dry-run mode** - Test before applying changes
-* **Rollback system** - Undo failed setups automatically
-* **Validation checks** - Verify setup integrity
-* **Health monitoring** - Track qube status
-* **Comprehensive logging** - Audit all actions
+- **Dry-run mode** - Test before applying changes
+- **Rollback system** - Undo failed setups automatically
+- **Validation checks** - Verify setup integrity
+- **Health monitoring** - Track qube status
+- **Comprehensive logging** - Audit all actions
 
-Ready to dive deeper? Check out the **[Configuration Guide](configuration.html)**!
+Ready to dive deeper? Check out the
+**[Configuration Guide](configuration.html)**!

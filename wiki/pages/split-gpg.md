@@ -1,18 +1,21 @@
 # Split-GPG Guide
 
-Complete guide to using Split-GPG in Qubes SDP for secure email encryption and signing.
+Complete guide to using Split-GPG in Qubes SDP for secure email encryption and
+signing.
 
 ## What is Split-GPG?
 
-Split-GPG is a Qubes OS security feature that stores GPG keys in an air-gapped qube (vault) while allowing other qubes (work) to use them for encryption, decryption, and signing operations. The private keys never leave the vault.
+Split-GPG is a Qubes OS security feature that stores GPG keys in an air-gapped
+qube (vault) while allowing other qubes (work) to use them for encryption,
+decryption, and signing operations. The private keys never leave the vault.
 
 ## Benefits
 
-* **Security**: Keys protected even if work qube compromised
-* **Air-gap**: Keys stored in network-isolated vault
-* **User Control**: Every operation requires user confirmation
-* **Separation**: Crypto operations isolated from daily tasks
-* **Backup**: Keys easily backed up with vault qube
+- **Security**: Keys protected even if work qube compromised
+- **Air-gap**: Keys stored in network-isolated vault
+- **User Control**: Every operation requires user confirmation
+- **Separation**: Crypto operations isolated from daily tasks
+- **Backup**: Keys easily backed up with vault qube
 
 ## Architecture
 
@@ -76,10 +79,10 @@ qvm-run vault 'gpg --full-gen-key'
 
 ### Best Practices for Key Generation
 
-* **Use strong passphrase** - Protects keys if vault compromised
-* **Set expiration** - 1-2 years recommended
-* **Use real identity** - For verification
-* **Backup immediately** - Export and store securely
+- **Use strong passphrase** - Protects keys if vault compromised
+- **Set expiration** - 1-2 years recommended
+- **Use real identity** - For verification
+- **Backup immediately** - Export and store securely
 
 ## Using Split-GPG
 
@@ -143,6 +146,7 @@ qubes-gpg-client --sign --encrypt --recipient user@example.com file.txt
 ### Thunderbird with Enigmail
 
 1. Install Thunderbird in work qube:
+
 ```bash
 qvm-run -u root work 'dnf install thunderbird'
 ```
@@ -154,6 +158,7 @@ qvm-run -u root work 'dnf install thunderbird'
    - Or use standard `/usr/bin/gpg` (wrapper auto-configured)
 
 4. Import keys:
+
 ```bash
 # Enigmail will use qubes-gpg-client automatically
 ```
@@ -315,9 +320,9 @@ Allow? [Y/n]
 
 ### Passphrase Protection
 
-* Set strong passphrase on keys
-* Passphrase only entered in vault (never exposed to work)
-* Consider using passphrase manager in vault
+- Set strong passphrase on keys
+- Passphrase only entered in vault (never exposed to work)
+- Consider using passphrase manager in vault
 
 ### Key Backup
 
@@ -357,23 +362,27 @@ Update public key on keyservers after extending expiration.
 **Solutions**:
 
 1. Verify vault is running:
+
 ```bash
 qvm-start vault
 ```
 
 2. Check QUBES_GPG_DOMAIN:
+
 ```bash
 echo $QUBES_GPG_DOMAIN
 # Should output: vault
 ```
 
 3. Set it if missing:
+
 ```bash
 export QUBES_GPG_DOMAIN=vault
 echo 'export QUBES_GPG_DOMAIN=vault' >> ~/.bashrc
 ```
 
 4. Verify qrexec policy:
+
 ```bash
 sudo cat /etc/qubes-rpc/policy/qubes.Gpg | grep work
 ```
@@ -386,12 +395,14 @@ sudo cat /etc/qubes-rpc/policy/qubes.Gpg | grep work
 
 1. Check if confirmation dialog appeared in vault
 2. Restart vault qube:
+
 ```bash
 qvm-shutdown vault
 qvm-start vault
 ```
 
 3. Check qrexec:
+
 ```bash
 journalctl -u qubes-qrexec-policy-daemon
 ```
@@ -487,12 +498,12 @@ Combine with hardware tokens (YubiKey, etc.):
 
 ## References
 
-* [Qubes Split-GPG Documentation](https://www.qubes-os.org/doc/split-gpg/)
-* [GnuPG Manual](https://gnupg.org/documentation/)
-* [Email Self-Defense (GNU)](https://emailselfdefense.fsf.org/)
+- [Qubes Split-GPG Documentation](https://www.qubes-os.org/doc/split-gpg/)
+- [GnuPG Manual](https://gnupg.org/documentation/)
+- [Email Self-Defense (GNU)](https://emailselfdefense.fsf.org/)
 
 ## Next Steps
 
-* **[Split-SSH Guide](split-ssh.html)** - Secure SSH keys
-* **[Security Guide](security-guide.html)** - Best practices
-* **[Backup & Restore](backup-restore.html)** - Protect your keys
+- **[Split-SSH Guide](split-ssh.html)** - Secure SSH keys
+- **[Security Guide](security-guide.html)** - Best practices
+- **[Backup & Restore](backup-restore.html)** - Protect your keys

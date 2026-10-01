@@ -33,6 +33,34 @@ MODIFIED_QUBES=()
 # LOGGING AND OUTPUT
 # ==============================================================================
 
+# Ensure the global LOG_FILE can be opened for append; takes no arguments.
+# On failure, select advanced-setup.log under XDG_STATE_HOME (defaulting to
+# $HOME/.local/state), with a mode-0700 qubes-sdp directory and umask 077 for
+# log creation. If that also fails, warn on stderr and set LOG_FILE=/dev/null.
+# An existing /dev/null selection is left alone.
+ensure_log_file() {
+    if [ "${LOG_FILE}" != "/dev/null" ]; then
+        if ! { : >> "${LOG_FILE}"; } 2>/dev/null; then
+            # /var/log is root-owned, so a non-root run lands here. Fall back
+            # to per-user XDG state, never /tmp: a predictable world-writable
+            # path lets another local user pre-create the file (CWE-377), and
+            # this log is worth keeping to review afterwards, so it is not
+            # throwaway (no mktemp). If even that fails, log to /dev/null
+            # rather than aborting the whole setup run under `set -e`.
+            local state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/qubes-sdp"
+            if mkdir -p "${state_dir}" 2>/dev/null && chmod 0700 "${state_dir}" 2>/dev/null && (umask 077; : >> "${state_dir}/advanced-setup.log") 2>/dev/null; then
+                LOG_FILE="${state_dir}/advanced-setup.log"
+            else
+                echo "WARNING: could not create a log file; continuing without one" >&2
+                LOG_FILE="/dev/null"
+            fi
+        fi
+    fi
+}
+
+# Append a timestamped entry to LOG_FILE. Takes a level as the first argument
+# and joins the remaining arguments as the message. When VERBOSE is true
+# (the default), also print a colored, level-prefixed message to stdout.
 log() {
     local level=$1
     shift
@@ -84,6 +112,10 @@ error_exit() {
 # CONFIGURATION LOADING
 # ==============================================================================
 
+# Source the global CONFIG_FILE into the current shell; takes no arguments.
+# If the file is missing, call error_exit (which may roll back) and exit 1.
+# Default DRY_RUN, VERBOSE, and LOG_FILE, then ensure the configured log is
+# writable or select a fallback before logging successful configuration load.
 load_config() {
     if [ ! -f "${CONFIG_FILE}" ]; then
         error_exit "Configuration file not found: ${CONFIG_FILE}"
@@ -99,6 +131,7 @@ load_config() {
     DRY_RUN="${DRY_RUN:-false}"
     VERBOSE="${VERBOSE:-true}"
     LOG_FILE="${LOG_FILE:-/var/log/qubes-sdp-setup.log}"
+    ensure_log_file
 
     log SUCCESS "Configuration loaded successfully"
 }
@@ -1214,10 +1247,15 @@ done
 # MAIN
 # ==============================================================================
 
+# Dispatch advanced setup or the requested rollback, validation, health-check,
+# or backup mode using parsed global options; takes no arguments. Initializes
+# logging with a per-user XDG state fallback, or /dev/null if unavailable, and
+# loads configuration as needed. Normal setup runs preflight checks, optionally
+# collects settings interactively, provisions qubes, and prints a summary.
 main() {
     # Initialize logging
+    ensure_log_file
     if [ "${LOG_FILE}" != "/dev/null" ]; then
-        touch "${LOG_FILE}" 2>/dev/null || LOG_FILE="/tmp/qubes-sdp-advanced-setup.log"
         log INFO "=== Qubes SDP Advanced Setup Started ==="
     fi
 

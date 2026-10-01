@@ -1,10 +1,12 @@
 # CLAUDE.md
 
-This document provides guidance for using Claude Code with the Qubes SDP (Software Development Platform) repository.
+This document provides guidance for using Claude Code with the Qubes SDP
+(Software Development Platform) repository.
 
 ## Overview
 
-This repository contains the Qubes Software Development Platform, designed to facilitate secure development workflows within the Qubes OS environment.
+This repository contains the Qubes Software Development Platform, designed to
+facilitate secure development workflows within the Qubes OS environment.
 
 ## Working with Claude Code
 
@@ -12,10 +14,13 @@ This repository contains the Qubes Software Development Platform, designed to fa
 
 When working with Claude Code on this project, you can:
 
-1. **Explore the codebase**: Ask Claude to explain components, trace functionality, or understand architecture
+1. **Explore the codebase**: Ask Claude to explain components, trace
+   functionality, or understand architecture
 2. **Implement features**: Request new functionality with clear requirements
-3. **Debug issues**: Share error messages or unexpected behavior for investigation
-4. **Refactor code**: Ask for improvements to code structure, performance, or maintainability
+3. **Debug issues**: Share error messages or unexpected behavior for
+   investigation
+4. **Refactor code**: Ask for improvements to code structure, performance, or
+   maintainability
 5. **Review changes**: Request code reviews before committing
 
 ### Project Structure
@@ -41,29 +46,36 @@ When asking Claude to help with development:
 When working with Qubes-related code:
 
 - **Security first**: All changes should maintain Qubes' security model
-- **Domain isolation**: Respect VM boundaries and inter-qube communication patterns
-- **Qrexec protocols**: When working with qrexec, ensure proper validation and security
+- **Domain isolation**: Respect VM boundaries and inter-qube communication
+  patterns
+- **Qrexec protocols**: When working with qrexec, ensure proper validation and
+  security
 - **Salt stack integration**: Follow Qubes' configuration management patterns
-- **Documentation**: Keep documentation updated for any qube-specific functionality
+- **Documentation**: Keep documentation updated for any qube-specific
+  functionality
 
 ### Common Tasks
 
 #### Code Review
+
 ```
 Review the changes in [file/component] for security issues and best practices
 ```
 
 #### Feature Implementation
+
 ```
 Implement [feature] that [does X] while maintaining compatibility with Qubes [version]
 ```
 
 #### Debugging
+
 ```
 I'm seeing [error/behavior]. The relevant code is in [location]. Can you help diagnose?
 ```
 
 #### Testing
+
 ```
 Create tests for [component] that verify [functionality]
 ```
@@ -77,7 +89,8 @@ Claude Code can help with git operations:
 - Reviewing diffs before committing
 - Preparing pull requests
 
-All changes will be committed to feature branches following the pattern `claude/*`.
+All changes will be committed to feature branches following the pattern
+`claude/*`.
 
 ### Best Practices
 
@@ -106,6 +119,7 @@ Be aware that Claude Code:
 ### Getting Help
 
 For issues specific to:
+
 - **Claude Code**: Use `/help` or visit https://docs.claude.com/claude-code
 - **This repository**: Check documentation or open an issue
 - **Qubes OS**: Consult https://www.qubes-os.org/doc/
@@ -113,21 +127,25 @@ For issues specific to:
 ## Example Interactions
 
 ### Exploring Code
+
 ```
 What does the [component] do and how does it integrate with Qubes?
 ```
 
 ### Adding Features
+
 ```
 Add support for [feature] that works across qubes using qrexec
 ```
 
 ### Security Analysis
+
 ```
 Review [component] for potential security issues in a Qubes context
 ```
 
 ### Documentation
+
 ```
 Generate documentation for [module] explaining its purpose and usage
 ```
@@ -150,4 +168,5 @@ When using Claude Code to contribute:
 
 ---
 
-**Note**: This file helps optimize collaboration between developers and Claude Code. Keep it updated as the project evolves.
+**Note**: This file helps optimize collaboration between developers and Claude
+Code. Keep it updated as the project evolves.
