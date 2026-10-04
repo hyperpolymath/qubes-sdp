@@ -195,19 +195,28 @@ Qubes SDP is a *fully-implemented, production-ready platform* with the following
 |===
 |Workflow |Status
 
-|ReScript/Deno CI
+|Workflow security linter (SPDX, permissions, duplicate keys, lockfile drift)
 |Complete
 
-|Instant-sync (forge propagation)
+|Estate governance bundle (allowlist, language/package policy, licence, RSR)
 |Complete
 
-|Policy enforcement (npm/bun/TS blockers)
+|Hypatia neurosymbolic security scan
 |Complete
 
-|Security workflows
+|Secret scanning + OpenSSF Scorecard
 |Complete
 
-|Code quality (CodeQL, Scorecard)
+|CodeQL Advanced analysis
+|Complete
+
+|Mirroring / forge propagation
+|Complete
+
+|Label tooling and auto-triage
+|Complete
+
+|SLSA level 3 build provenance
 |Complete
 
 |Documentation publishing
@@ -220,7 +229,7 @@ Qubes SDP is a *fully-implemented, production-ready platform* with the following
 |===
 |Component |Status
 
-|ReScript wiki frontend
+|AffineScript wiki frontend
 |Complete
 
 |Interactive features (TOC, search, copy)

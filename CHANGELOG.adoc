@@ -115,6 +115,46 @@ pentester)
 
 === [Unreleased]
 
+==== Fixed
+
+* **CI — `CodeQL Advanced` no longer dies at startup.** `.github/workflows/codeql.yml`
+  requested `github/codeql-action@v4.38.2` while `.github/workflows/actions.lock`
+  still recorded `v4.38.0`. A workflow whose refs do not match the lockfile is
+  refused by GitHub at `startup_failure` with no jobs, no log and no check run.
+  The lockfile is reconciled, and `workflow-linter.yml` now fails the build on
+  lockfile drift, so a dependabot bump can no longer kill a workflow silently
+  after merge. See `docs/decisions/0002-*`.
+* **CI — the SLSA provenance workflow is valid YAML again.** Its `provenance`
+  job declared `actions: read` and `contents: read` twice, which GitHub rejects
+  outright: the run was `failure` with no jobs and the only clue was "This run
+  likely failed because of a workflow file issue." The duplicates are merged
+  (`write` subsumes `read`), leaving the effective permission set unchanged.
+* **CI — `Workflow Security Linter` no longer fails on every file.** Its SPDX
+  check tested line 1, but `gh actions-lock` inserts its managed marker at line 1,
+  pushing the identifier to line 2. The check now scans the leading comment
+  block, matching the estate's governance bundle.
+* **CI — the `Deno test` failure is gone.** `rescript-deno-ci.yml` was a leftover
+  from the pre-AffineScript tree; with no `.ts`/`.js`/`.res` sources left after
+  the ReScript eradication (#56) it could only ever fail. Removed, along with its
+  `actions.lock` entries.
+
+==== Added
+
+* `workflow-linter.yml` now also detects duplicate YAML mapping keys,
+  `actions.lock` drift, and workflows missing from the lockfile, and runs a
+  weekly sweep so drift introduced outside a workflow edit is still caught.
+* `docs/decisions/0002-ci-health-lockfile-and-workflow-hygiene.adoc` — root-cause
+  record for the eight red checks in #81, including the one that needs a
+  repository-setting change and therefore cannot be fixed from the tree.
+
+==== Changed
+
+* `README.adoc` and `ROADMAP.adoc` now describe the workflows and frontend
+  language that actually exist (the CI tables still listed six deleted
+  workflows and a `src/WikiMain.res` that became `src/WikiMain.affine` in #56).
+* `.hypatia-ignore` no longer carries an exemption for `src/WikiMain.res`,
+  a path that has not existed since the ReScript eradication.
+
 ==== Planned
 
 * Web-based configuration UI

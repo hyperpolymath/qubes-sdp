@@ -140,7 +140,7 @@ Example configuration files in `examples/`:
 
 === Wiki System
 
-Complete documentation wiki with ReScript frontend:
+Complete documentation wiki with an AffineScript frontend:
 
 [source,plaintext]
 ----
@@ -161,7 +161,7 @@ wiki/
  +-- static/css/style.css       # Professional responsive styling
 ----
 
-*Wiki frontend* (`src/WikiMain.res` - 207 lines ReScript):
+*Wiki frontend* (`src/WikiMain.affine` - 207 lines AffineScript):
 
 * DOM manipulation and navigation highlighting
 * Copy-to-clipboard for code blocks
@@ -196,40 +196,46 @@ bash tests/unit-tests.sh
 |===
 |Workflow |Purpose
 
-|`rescript-deno-ci.yml`
-|ReScript and Deno build/test/type-check
-
-|`instant-sync.yml`
-|Automatic propagation to git forges
-
-|`runtime-policy.yml`
-|Enforces no npm/bun policy
-
-|Enforces no TypeScript policy
-
-|`guix-nix-policy.yml`
-|Package manager policy enforcement
-
-|`wellknown-enforcement.yml`
-|.well-known standards enforcement
-
-|`security-policy.yml`
-|Security policy automation
+|`workflow-linter.yml`
+|Workflow security linter — SPDX headers, permissions, duplicate YAML
+keys, `actions.lock` drift/coverage, action pinning
 
 |`codeql.yml`
-|Code quality analysis
+|CodeQL Advanced static analysis
 
-|`mirror.yml`
-|Repository mirroring
+|`governance.yml`
+|Estate governance bundle (Actions allowlist, language/package policy,
+licence consistency, RSR profile, workflow-pin staleness)
 
-|`jekyll-gh-pages.yml`
-|Documentation publishing
+|`hypatia-scan.yml`
+|Hypatia neurosymbolic CI/CD security scan
+
+|`secret-scanner.yml`
+|Secret scanning (gitleaks, Rust and shell secret detectors)
 
 |`scorecard.yml`
-|Security scorecards
+|OpenSSF Scorecard supply-chain analysis
 
-|`quality.yml`
-|Code quality checks
+|`mirror.yml`
+|Repository mirroring to git forges
+
+|`instant-sync.yml`
+|Automatic propagation to git forges (currently disabled)
+
+|`label-triage.yml`
+|Automatic triage of newly opened issues
+
+|`labels.yml`
+|Estate label synchronisation
+
+|`pages.yml`
+|Documentation publishing (currently disabled)
+
+|`push-email-notify.yml`
+|Push notification email (currently disabled)
+
+|`generator-generic-ossf-slsa3-publish.yml`
+|SLSA level 3 build provenance on release creation
 |===
 
 === Compliance & Verification
@@ -431,7 +437,7 @@ sudo qubesctl state.apply qubes-sdp
 |Salt/Infrastructure
 |~200
 
-|ReScript/Web
+|AffineScript/Web
 |~200
 
 |*Total substantive*
