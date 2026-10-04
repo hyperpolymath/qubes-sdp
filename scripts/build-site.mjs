@@ -47,6 +47,17 @@ const ROOT = resolve(
   dirname(dirname(realpathSync(argv[1] ?? import.meta.url.pathname))),
 );
 
+// Total order over strings by UTF-16 code unit — the same order
+// `Array#sort()` uses with no comparator. Spelled out because an implicit
+// comparator silently sorts numbers and objects by a string coercion that is
+// almost never what the caller meant, and because the digest in `hashOutputs`
+// is a stability contract: the order has to be stated, not assumed.
+function compareStrings(a, b) {
+  if (a < b) return -1;
+  if (a > b) return 1;
+  return 0;
+}
+
 // ── CLI ───────────────────────────────────────────────────────────────
 
 function parseArgs(raw) {
@@ -162,7 +173,7 @@ function walk(dir) {
       else if (entry.isFile()) files.push(abs);
     }
   }
-  return files.map(toPosixAbs).sort();
+  return files.map(toPosixAbs).sort(compareStrings);
 }
 
 function toPosixAbs(abs) {
@@ -204,7 +215,11 @@ function urlFor(baseurl, sitePath) {
 }
 
 function normaliseBaseurl(raw) {
-  const value = String(raw ?? "").trim().replace(/\/+$/, "");
+  // Strip trailing slashes without a regex. `/\/+$/` reads better but is
+  // quadratic on a run of slashes: each candidate start position retries the
+  // whole run before `$` finally holds. A loop is linear and shows its cost.
+  let value = String(raw ?? "").trim();
+  while (value.endsWith("/")) value = value.slice(0, -1);
   if (value === "" || value === "/") return "";
   const candidate = value.startsWith("/") ? value : `/${value}`;
   if (!/^\/[A-Za-z0-9._~/-]+$/.test(candidate)) {
@@ -360,7 +375,7 @@ function build(opts) {
   }
 
   const hash = createHash("sha256");
-  for (const site of [...outputs.keys()].sort()) {
+  for (const site of [...outputs.keys()].sort(compareStrings)) {
     hash.update(`${site}\u0000`);
     hash.update(outputs.get(site));
     hash.update("\n");
