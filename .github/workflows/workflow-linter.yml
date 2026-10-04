@@ -36,7 +36,7 @@ jobs:
         uses: actions/checkout@v7.0.1
         with:
           repository: hyperpolymath/standards
-          ref: 84355587cb2a1f86e6882de83514a32db2646e7a
+          ref: a9a3281d620bdd195369c9a6f0bc1d661910965a
           path: .standards-checkout
           # Directory form, non-cone: the same shape five green jobs in
           # governance-reusable.yml use to fetch standards' scripts/.

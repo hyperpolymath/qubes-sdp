@@ -141,6 +141,51 @@ The estate's governance bundle hit this exact fault first and fixed it in
 carried a private copy of the *old* check, so the two gates disagreed about the
 same tree.
 
+=== The fourth core matter: a pinned reusable that predates its own fix
+
+`Governance / Workflow security linter` failed at `Duplicate YAML keys in
+workflows` — fixed above — which *unmasked* the next failure in the same job:
+`Check SHA-pinned actions`.
+
+That step runs:
+
+----
+gh extension install github/gh-actions-lock
+bash scripts/update-actions-lock.sh --verify-local
+----
+
+`scripts/update-actions-lock.sh` exists in `hyperpolymath/standards`' own tree.
+It does not exist in this repository, nor in `hyperpolymath/hypatia`, nor in any
+other consumer checked. For a consumer the step dies with exit 127 before it
+ever looks at a pin. It also demanded inline SHA pins *on top of* a lockfile —
+the exact combination #74 had just dismantled.
+
+This was never a green check. The `Governance` workflow has **171 recorded runs
+and not one success** since it was introduced on 2026-05-17; the step simply
+never got the chance to fail, because `Duplicate YAML keys` failed first.
+
+Upstream has since fixed it. In `standards` today the step is gone from the
+`Workflow security linter` job — *"the actions-lock gate used to be staged here
+too. It is its own job now (`actions-lock-verify` …)"* — and the new
+`check-actions-lock-gate.sh` states the actual policy plainly:
+
+****
+lockfile present → run the authoritative verifier and propagate its exit
+status. … lockfile absent → RED: an unpinned `uses:` is a violation today,
+lock or no lock.
+****
+
+So a present lockfile is sufficient on its own. Tag refs in the workflow are
+the design, not a defect. The `Check SHA-pinned actions` step was enforcing a
+policy the estate had already reversed.
+
+The fix is therefore to stop pinning a revision of `governance-reusable.yml`
+that predates its own correction. All five `hyperpolymath/standards` reusable
+pins in this repository moved `84355587` → `a9a3281d` (`standards`@main,
+2026-10-04). The workflow-staleness gate confirms the new pin is a genuine
+ancestor of `standards` HEAD and carries no known defect, and its advisory
+notices named exactly this refresh for `hypatia-scan.yml` and `scorecard.yml`.
+
 == Decision
 
 . **`actions.lock` is authoritative for pins, and its agreement with the
@@ -171,6 +216,13 @@ same tree.
   upstream template ships it and is flagged as an owner follow-up — see
   "Consequences".
 
+. **The five `hyperpolymath/standards` reusable pins move `84355587` →
+  `a9a3281d`.** This is the estate's own propagation action, not a local
+  invention: the staleness gate's advisory notices named the refresh, and the
+  newer revision is where the caller-tree `update-actions-lock.sh` bug and the
+  "inline SHA pins *and* a lockfile" contradiction were both removed. See "The
+  fourth core matter" above.
+
 . **A weekly sweep is added to `workflow-linter.yml`.** Drift is not only
   introduced by editing a workflow file; an action bump merged from a branch
   that does not touch `.github/workflows/**` leaves the tree inconsistent
@@ -186,6 +238,18 @@ same tree.
   on every push to `main`. Those runs carried the filename as the workflow
   name and the message "This run likely failed because of a workflow file
   issue" — the only visible trace of the duplicate keys.
+. **Positive**: `Governance / Workflow security linter` now has a route to
+  green. Its `Check SHA-pinned actions` step was unreachable for any consumer
+  repo, and the `Governance` workflow had 171 runs and zero successes before
+  this change.
+. **Negative**: the pin bump brings three new governance jobs with it —
+  `UUID v7 conformance`, `Live Actions policy (credentialed advisory)` and
+  `Actions lockfile verify`. The first passes on this tree (verified locally
+  with `check-uuid-v7.sh`). The second fails for the same repository-setting
+  reason as `Allowlist Preflight`, so it is a duplicate of a known red rather
+  than a new class of fault. The third runs `gh actions-lock --verify-local`
+  against the reconciled lockfile; if the tool disagrees with the hand edit,
+  that is a real finding about the lockfile and must be fixed, not hidden.
 . **Positive**: the fault class is now caught *before* merge. A dependabot PR
   that bumps an action without regenerating the lockfile goes red on
   `lint-workflows` instead of silently killing a workflow after merge.
