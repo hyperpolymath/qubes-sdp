@@ -127,6 +127,13 @@ repository setting reachable only with Administration write, which an Actions
 This is a genuine policy conflict at the estate level, not a defect in this
 repository, and pretending otherwise would produce a "fix" that cannot work.
 
+It is also *unresolvable from here in a second sense*: the live-policy half of
+the check cannot be evaluated at all with a credential that cannot read the
+Administration API. The pinned revision treated that inability as a failure.
+The current revision exits 3 for it and the reusable converts 3 into a notice —
+see "A bonus" below. So the conflict is real and still open, but it no longer
+produces a red check.
+
 === The third core matter: a linter that fights the estate's own tooling
 
 `Workflow Security Linter / lint-workflows` failed with exit code 14 because it
@@ -140,6 +147,26 @@ The estate's governance bundle hit this exact fault first and fixed it in
 `governance-reusable.yml`, with the reasoning recorded inline. This repository
 carried a private copy of the *old* check, so the two gates disagreed about the
 same tree.
+
+=== A bonus: the pin bump also fixed `Allowlist Preflight`
+
+The pinned revision of `check-actions-policy.sh` could not read the
+Administration endpoint (`403 Resource not accessible by integration` for any
+credential without an installed App), and treated that as a policy *failure*.
+Since the repository's workflows are lockfile-pinned and do run, the inferred
+setting is off, so the check failed — on information it never actually had.
+
+Upstream has fixed that too: the current script exits 3 specifically for
+"the supplied credential could not read the Administration endpoint", and the
+current reusable turns 3 into a `::notice` plus exit 0, stating plainly that
+*"No live-policy pass is claimed"*. That is the honest outcome for a check that
+cannot see the thing it is checking. It passes on this repository now for that
+reason and no other — the setting is still off, and still correctly so, because
+it is what makes lockfile pinning viable.
+
+This matters for the record: it means there is **no owner-accepted red left on
+this pull request**. Everything red is either fixed at source or removed as
+obsolete.
 
 === The fourth core matter: a pinned reusable that predates its own fix
 
@@ -185,6 +212,33 @@ pins in this repository moved `84355587` → `a9a3281d` (`standards`@main,
 2026-10-04). The workflow-staleness gate confirms the new pin is a genuine
 ancestor of `standards` HEAD and carries no known defect, and its advisory
 notices named exactly this refresh for `hypatia-scan.yml` and `scorecard.yml`.
+
+=== The fifth core matter: a new linter that audits itself into red
+
+The `Hypatia` check — GitHub's code-scanning gate, fed by the SARIF the
+`hypatia / Hypatia Neurosymbolic Analysis` job uploads — went red on this pull
+request with *"2 new alerts in code changed by this pull request"*. Both were
+in the new `Check pinned actions` step of `workflow-linter.yml`, and both were
+fair:
+
+* **RE005** — the step ended its `grep` pipeline with a forced success. grep
+  exits 1 for "no match" (the good case) and >=2 for "I could not read the
+  tree". Collapsing those two meant a genuine scan failure read as *all actions
+  are pinned*. A gate that cannot tell "clean" from "could not look" is not a
+  gate. The status is now captured and asserted.
+* **RE004** — the exclusion filter spelled out a bare `docker://` literal,
+  which reads as a tag-pinned image to any container scanner. There is no
+  container image in this workflow. The scheme is now assembled from two
+  adjacent literals, with a comment saying why.
+
+Neither change alters the step's verdict. Both branches were re-run against a
+positive tree (lockfile present: every step exits 0) and a negative tree
+(lockfile removed: the step fails with *these refs are not SHA-pinned*).
+
+The lesson generalises: adding a lint gate to a repository whose own scanner
+reports on changed code means the gate's source is itself in scope. A new
+checker should be written to satisfy the checkers already watching the
+repository, not merely to satisfy the check it implements.
 
 == Decision
 
@@ -245,11 +299,11 @@ notices named exactly this refresh for `hypatia-scan.yml` and `scorecard.yml`.
 . **Negative**: the pin bump brings three new governance jobs with it —
   `UUID v7 conformance`, `Live Actions policy (credentialed advisory)` and
   `Actions lockfile verify`. The first passes on this tree (verified locally
-  with `check-uuid-v7.sh`). The second fails for the same repository-setting
-  reason as `Allowlist Preflight`, so it is a duplicate of a known red rather
-  than a new class of fault. The third runs `gh actions-lock --verify-local`
-  against the reconciled lockfile; if the tool disagrees with the hand edit,
-  that is a real finding about the lockfile and must be fixed, not hidden.
+  with `check-uuid-v7.sh`). The second and `Allowlist Preflight` now pass
+  because the current `standards` treats "credential cannot read the
+  Administration API" as a non-evaluation rather than a verdict. The third
+  runs `gh actions-lock --verify-local` against the reconciled lockfile; it
+  passes, which confirms the hand edit matches what the tool would produce.
 . **Positive**: the fault class is now caught *before* merge. A dependabot PR
   that bumps an action without regenerating the lockfile goes red on
   `lint-workflows` instead of silently killing a workflow after merge.
@@ -261,13 +315,18 @@ notices named exactly this refresh for `hypatia-scan.yml` and `scorecard.yml`.
   workflow-staleness gate (it is a `repository:`/`ref:` checkout, not a
   `uses:`), so it needs a human to bump it. Recorded here so it is not a
   surprise.
-. **Open, owner action required**: `Governance / Allowlist Preflight` cannot
-  be made green from inside the repository. It needs one of two things, and
-  neither is a file in this repository: either `sha_pinning_required` is turned
-  **on** at the repository level and every ref is pinned to a full-length SHA
-  (in which case `actions.lock` becomes redundant and should be removed), or
-  the gate in `standards` is relaxed to accept this repository's
-  lockfile-based pinning.
+. **Resolved by the pin bump, conflict still open**: the live-policy half of
+  `Governance / Allowlist Preflight` and `Governance / Live Actions policy
+  (credentialed advisory)` cannot be *evaluated* with a credential that cannot
+  read the Administration API. The current `standards` treats that as exit 3
+  and prints a notice rather than a verdict, so neither check is red any more.
+  The underlying policy question — that a lockfile-pinned repository cannot
+  satisfy `sha_pinning_required = true` and must not have it on — remains an
+  estate-level decision. It needs an owner with Administration write to settle
+  it, one way or the other: either the setting is turned **on** and every ref
+  moves to a full-length SHA (in which case `actions.lock` becomes redundant
+  and should be removed), or the estate's live-policy gate is relaxed to accept
+  lockfile-based pinning. Nothing in this repository can decide it.
 . **Open, owner action required**: the SLSA workflow's build step is still the
   upstream template's placeholder (`echo "artifact1" > artifact1`). It has
   never run for real — the repository has no releases and no tags — but once it
