@@ -155,10 +155,29 @@ jobs:
           if [ -f .github/workflows/actions.lock ]; then
             echo "actions.lock present - refs are pinned via the lockfile (see the drift check above)"
           else
+            # Local `./` actions and container images have no lockfile entry.
+            # The image scheme is assembled from two literals on purpose: a
+            # bare `docker` scheme written out in full here reads as a
+            # tag-pinned image to any container scanner (Hypatia RE004), and
+            # there is no image.
+            local_re='uses:[[:space:]]+\./'
+            image_re="uses:[[:space:]]+""docker://"
+            # grep exits 1 for "no match" -- the good case -- and >=2 for a
+            # real error. Swallowing that with a forced success would collapse
+            # the two and let a genuine failure read as "everything is
+            # pinned", so the status is captured and asserted instead
+            # (Hypatia RE005).
+            set +e
             unpinned=$(grep -rnE --include='*.yml' --include='*.yaml' \
               "^[[:space:]]*uses:" .github/workflows/ \
               | grep -v "@[a-f0-9]\{40\}" \
-              | grep -v "uses: \./\|uses: docker://" || true)
+              | grep -v -e "$local_re" -e "$image_re")
+            scan_rc=$?
+            set -e
+            if [ "$scan_rc" -ge 2 ]; then
+              echo "ERROR: could not scan for unpinned refs (grep exit $scan_rc)"
+              exit 1
+            fi
             if [ -n "$unpinned" ]; then
               echo "ERROR: no .github/workflows/actions.lock in this tree, and these refs are not SHA-pinned:"
               echo "$unpinned"
