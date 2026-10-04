@@ -1,0 +1,245 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath) <6759885+hyperpolymath@users.noreply.github.com>
+= ADR-0002 — CI health: `actions.lock` is authoritative, and the workflow gates must agree with it
+:revdate: 2026-10-04
+:status: ACCEPTED
+
+== Context
+
+Issue #81 recorded eight checks already red on `main`, independent of any
+open pull request:
+
+[cols="1,2,2"]
+|===
+|Check |State on `main` |Root cause
+
+|`.github/workflows/generator-generic-ossf-slsa3-publish.yml`
+|`failure`, 0s, no jobs, no log
+|Duplicate YAML mapping keys in the `provenance` job's `permissions` block
+
+|`Workflow Security Linter / lint-workflows`
+|`failure`, exit 14
+|The SPDX check tested `head -1`, which `gh actions-lock` always overwrites
+
+|`ReScript/Deno CI / build`
+|`failure` at the `Deno test` step
+|Leftover ReScript-era CI; the repository has no TypeScript, JavaScript or
+ReScript sources left
+
+|`Hypatia Security Scan / hypatia Neurosymbolic Analysis`
+|`failure` at the time of filing, green since
+|Upstream: the Hypatia scanner outages of 2026-09-26..30, not this repository
+
+|`Governance / Workflow security linter`
+|`failure` at `Duplicate YAML keys in workflows`
+|Same duplicate keys as the SLSA row above
+
+|`Governance / Guix packaging policy (Nix retired)`
+|`failure` at the time of filing, green since
+|Upstream: `standards` changed the applicability predicate on 2026-10-01
+(owner decision "only repos that need it"); this repository declares no
+`rsr-profile.a2ml`, so packaging is not applicable
+
+|`Governance / Allowlist Preflight`
+|`failure` at `Check live Actions policy`
+|Repository *setting*, not repository content — see "Consequences"
+
+|`CodeQL Advanced`
+|`startup_failure`, 0s, no check run recorded
+|`actions.lock` drift: `codeql.yml` requested `github/codeql-action@v4.38.2`
+while the lockfile still recorded `v4.38.0`
+|===
+
+Three of these are not independent faults. They are one fault wearing three
+hats, and it is worth naming it precisely, because it is the thing that
+recurs.
+
+=== The core matter: `actions.lock` is authoritative, and nothing kept it so
+
+This repository's pinning model was settled by two commits that disagree with
+each other:
+
+* `c30a7fb` (#73, 2026-09-20) — "pin third-party actions to full commit SHAs",
+  on the stated ground that the account's Actions policy refuses a tag or
+  branch ref at startup (`startup_failure`, no jobs, "this workflow graph
+  cannot be shown"). It SHA-pinned every ref inline.
+* `cfc1b50` (#74, 2026-09-20, three hours later) — "reconcile the workflows
+  with actions.lock", which *reverted* those inline SHAs back to readable refs
+  on the ground that "`actions.lock` is authoritative: the workflows carry
+  readable refs and the lock records the commit each ref resolves to, which is
+what actually runs. Refs that stop matching the manifest make the whole
+repository unstartable — `startup_failure`, 'Invalid lockfile'."
+
+#74 is the correct model and #73's premise is wrong for this repository — the
+workflows demonstrably do run on tag refs today. But #74 fixed the *symptom*
+and left the *mechanism* missing: nothing in this repository verified that the
+lockfile still matched the workflows. The estate's own drift checker spells out
+why that matters:
+
+****
+Dependabot bumps an action version *in a workflow file*. Nobody regenerates
+`.github/workflows/actions.lock`. The workflow now requests a version the
+lockfile does not record, and GitHub rejects the run at `startup_failure` with
+ZERO jobs — no log, no annotation, nothing in REST or GraphQL. It is
+self-reinflicting: any repo with Dependabot AND a lockfile AND no regeneration
+step re-acquires the fault on every action bump.
+****
+
+That is exactly what happened here, three times:
+
+[cols="1,1,1"]
+|===
+|Commit |Effect on `codeql.yml` |`actions.lock` after
+
+|`5977b22` (#79, 2026-09-21)
+|`github/codeql-action@v4.38.0`
+|`v4.38.0` — in step, CodeQL green
+|`28c32d3` (#78, 2026-09-26)
+|`v4.38.1` (dependabot)
+|still `v4.38.0` — **drift**, CodeQL red from here on
+|`6c1bf2d` (#83, 2026-10-03)
+|`v4.38.2` (dependabot)
+|still `v4.38.0` — **drift**, CodeQL red
+|===
+
+The failure signature matches the diagnosis exactly. Every other workflow in
+the repository kept running, because every other workflow's refs still matched
+the lock. Only `codeql.yml` had drifted, so only `CodeQL Advanced` died. The
+run list confirms it: 100% `startup_failure` from 2026-09-26 onward, 0s
+duration, zero jobs, zero check runs — while `Governance`, `Hypatia Security
+Scan`, `Mirror to Git Forges`, `Secret Scanner` and `Workflow Security Linter`
+all ran on the very same commits.
+
+=== The second core matter: two gates that cannot both be satisfied
+
+`Governance / Allowlist Preflight` runs `check-actions-policy.sh`, which reads
+the repository's *live* Actions settings through the Administration API and
+requires, among other things, `sha_pinning_required = true`.
+
+This repository's workflows pin through `actions.lock` — readable refs in the
+workflow, commit SHAs in the lock. That model is only viable while
+`sha_pinning_required` is **off**: with it on, GitHub refuses a tag ref at
+startup. The workflows run, therefore the setting is off, therefore the gate
+fails. There is no file in this repository that can change that; it is a
+repository setting reachable only with Administration write, which an Actions
+`GITHUB_TOKEN` does not have.
+
+This is a genuine policy conflict at the estate level, not a defect in this
+repository, and pretending otherwise would produce a "fix" that cannot work.
+
+=== The third core matter: a linter that fights the estate's own tooling
+
+`Workflow Security Linter / lint-workflows` failed with exit code 14 because it
+tested `head -1 "$f"` for `# SPDX-License-Identifier:`. `gh actions-lock`
+*inserts* `# This workflow is managed by gh actions-lock.` at line 1 whenever it
+mints or refreshes a lockfile, so the identifier is always on line 2 in a
+managed repository. The check failed on all 14 workflow files at once, and
+would re-fail on every future lockfile refresh.
+
+The estate's governance bundle hit this exact fault first and fixed it in
+`governance-reusable.yml`, with the reasoning recorded inline. This repository
+carried a private copy of the *old* check, so the two gates disagreed about the
+same tree.
+
+== Decision
+
+. **`actions.lock` is authoritative for pins, and its agreement with the
+  workflows is now enforced, not assumed.** The lockfile was reconciled
+  (`github/codeql-action` v4.38.0 -> v4.38.2, commit
+  `2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2`), and
+  `workflow-linter.yml` gained three checks that make drift unrepresentable:
+  duplicate YAML keys, lockfile drift, and lockfile coverage. They reuse the
+  estate's shared scripts from `hyperpolymath/standards` at a pinned SHA
+  rather than re-implementing them here — the whole point of the shared
+  governance bundle is to not carry per-repo copies of gates.
+
+. **The SPDX check scans the leading comment block, not line 1.** This is the
+  idiom `governance-reusable.yml` already uses, so the two gates now agree.
+
+. **`rescript-deno-ci.yml` is deleted.** ReScript eradication and the semantic
+  port to AffineScript completed in #56 (commits `7180409`, `e0494e6`);
+  `src/WikiMain.res` became `src/WikiMain.affine`. The repository contains no
+  `.ts`, `.js` or `.res` file, so `deno test` failed with "no test modules
+  found" and `deno fmt --check` had nothing to format. Keeping the workflow
+  meant keeping a permanently red check whose only subject no longer exists.
+  Its `actions.lock` entries (`denoland/setup-deno`) are removed with it.
+
+. **`generator-generic-ossf-slsa3-publish.yml` keeps its provenance job, with
+  one entry per key.** The duplicated `actions:`/`contents:` pair is merged
+  (`write` subsumes `read`), so the job's effective permission set is
+  unchanged. The stock `artifact1`/`artifact2` build step is left as the
+  upstream template ships it and is flagged as an owner follow-up — see
+  "Consequences".
+
+. **A weekly sweep is added to `workflow-linter.yml`.** Drift is not only
+  introduced by editing a workflow file; an action bump merged from a branch
+  that does not touch `.github/workflows/**` leaves the tree inconsistent
+  until the next edit, which can be months.
+
+== Consequences
+
+. **Positive**: `CodeQL Advanced` runs again. Its last successful run was
+  2026-09-22 (run 203); every run since 2026-09-26 died at startup with no
+  diagnostic of any kind.
+. **Positive**: the SLSA workflow becomes *valid*, so GitHub stops minting a
+  phantom `failure` run against `.github/workflows/generator-generic-ossf-slsa3-publish.yml`
+  on every push to `main`. Those runs carried the filename as the workflow
+  name and the message "This run likely failed because of a workflow file
+  issue" — the only visible trace of the duplicate keys.
+. **Positive**: the fault class is now caught *before* merge. A dependabot PR
+  that bumps an action without regenerating the lockfile goes red on
+  `lint-workflows` instead of silently killing a workflow after merge.
+. **Negative**: dependabot PRs that bump an action will be red until the
+  lockfile is regenerated. This is deliberate. The alternative — letting the
+  bump through — is what produced this issue.
+. **Negative**: `workflow-linter.yml` now fetches two scripts from
+  `hyperpolymath/standards` at a pinned SHA. That pin is not tracked by the
+  workflow-staleness gate (it is a `repository:`/`ref:` checkout, not a
+  `uses:`), so it needs a human to bump it. Recorded here so it is not a
+  surprise.
+. **Open, owner action required**: `Governance / Allowlist Preflight` cannot
+  be made green from inside the repository. It needs one of two things, and
+  neither is a file in this repository: either `sha_pinning_required` is turned
+  **on** at the repository level and every ref is pinned to a full-length SHA
+  (in which case `actions.lock` becomes redundant and should be removed), or
+  the gate in `standards` is relaxed to accept this repository's
+  lockfile-based pinning.
+. **Open, owner action required**: the SLSA workflow's build step is still the
+  upstream template's placeholder (`echo "artifact1" > artifact1`). It has
+  never run for real — the repository has no releases and no tags — but once it
+  does, it would attach provenance for two meaningless files to the release.
+. **Open, owner action required**: `SonarCloud Code Analysis` is red on `main`
+  with "Quality Gate failed". It is produced by the SonarCloud GitHub App, is
+  configured entirely outside this repository (there is no
+  `sonar-project.properties` in the tree), and is out of scope for #81, which
+  enumerates the checks it covers. Noted here so it is not lost.
+. **Observation, not a fault**: `Governance / Guix packaging policy (Nix
+  retired)` is currently green for the wrong reason. The job copies only
+  `check-package-policy.sh` out of `standards`, so the capability resolver
+  `check-rsr-profile.sh` is absent in CI; the script then treats this
+  repository as declaring no packaging capability and reports "not
+  applicable". If `standards` later ships the resolver alongside the checker,
+  this repository will need either a `.machine_readable/rsr-profile.a2ml` or a
+  real packaging artefact. Worth knowing before it happens.
+
+== Alternatives considered
+
+. **Pin everything to full-length SHAs and delete `actions.lock`.** Rejected.
+  `cfc1b50` explicitly reverted that shape, the estate's own tooling
+  (`gh actions-lock`) generates readable-ref-plus-lock, and it would not by
+  itself satisfy the live-policy gate, which reads a repository setting.
+. **Turn off `workflow-linter.yml`'s SPDX check.** Rejected. The identifier is
+  worth checking; the check was wrong, not the requirement.
+. **Delete `generator-generic-ossf-slsa3-publish.yml`.** Rejected as too
+  aggressive: provenance on release is a real supply-chain control, and the
+  defect was two duplicated keys, not the workflow's purpose. Deferred to the
+  owner instead, per the placeholder note above.
+. **Delete `codeql.yml` because the repository has no JavaScript.** Rejected.
+  `javascript-typescript` with `build-mode: none` is cheap and covers
+  `scripts/build-site.mjs`; removing analysis to make a check go green is the
+  wrong direction. (The "missing language" hypothesis was tested and rejected:
+  the action's `init/action.yml` is byte-identical across v4.38.0/v4.38.1/v4.38.2,
+  and the failure predates any language-detection change.)
+. **Leave `Allowlist Preflight` undocumented.** Rejected — #81's acceptance
+  criteria explicitly allow a documented, owner-accepted red, and an
+  undocumented red is indistinguishable from an unnoticed one.

@@ -63,13 +63,19 @@ jobs:
 
   provenance:
     needs: [build]
+    # ⚠ ONE ENTRY PER KEY. This block previously listed `actions: read` and
+    # `contents: read` twice — the duplicate `actions:`/`contents:` mapping
+    # keys made the file invalid YAML, and GitHub rejects a workflow with
+    # duplicate keys outright: the run is `failure` with no jobs, no log and
+    # no check run, surfaced only as "This run likely failed because of a
+    # workflow file issue." GitHub itself never told us which key, which is
+    # why this survived review. `write` subsumes `read`, so the merged set
+    # below is exactly the union of what the two halves asked for.
     permissions:
-      actions: read
-      contents: read
+      actions: read      # To read the workflow path.
+      contents: write    # To add assets to a release (subsumes `contents: read`).
       security-events: write
-      actions: read   # To read the workflow path.
-      id-token: write # To sign the provenance.
-      contents: write # To add assets to a release.
+      id-token: write    # To sign the provenance.
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@f7dd8c54c2067bafc12ca7a55595d5ee9b75204a  # v2.1.0
     with:
       base64-subjects: "${{ needs.build.outputs.digests }}"

@@ -21,5 +21,12 @@
 #
 # Inventory taken 2026-08-06 across all 424 estate repositories.
 # Files covered: 1 rescript
-
-cicd_rules/banned_language_file:src/WikiMain.res
+#
+# LEDGER EMPTY as of 2026-10-04. The single entry that was here —
+# `cicd_rules/banned_language_file:src/WikiMain.res` — named a file that no
+# longer exists: the ReScript eradication and semantic port to AffineScript
+# (#56, commits 7180409 / e0494e6) replaced it with `src/WikiMain.affine`.
+# An exemption for a path that is not in the tree buys nothing and costs a
+# reader the assumption that the ledger is live, so it is removed rather than
+# left as a tombstone. Re-add a line only for a file that actually exists and
+# actually needs the exception.
