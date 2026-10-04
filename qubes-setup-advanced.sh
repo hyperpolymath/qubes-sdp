@@ -15,6 +15,9 @@ CONFIG_FILE="${SCRIPT_DIR}/qubes-config.conf"
 LOG_FILE="/var/log/qubes-sdp-setup.log"
 STATE_FILE="/var/run/qubes-sdp-state.json"
 ROLLBACK_FILE="/var/run/qubes-sdp-rollback.sh"
+# The null sink. Named because it appears in four places, and "which three did
+# the last edit change" is not a question a setup script should make you ask.
+readonly LOG_NULL="/dev/null"
 
 # Colors
 RED='\033[0;31m'
@@ -39,21 +42,19 @@ MODIFIED_QUBES=()
 # log creation. If that also fails, warn on stderr and set LOG_FILE=/dev/null.
 # An existing /dev/null selection is left alone.
 ensure_log_file() {
-    if [ "${LOG_FILE}" != "/dev/null" ]; then
-        if ! { : >> "${LOG_FILE}"; } 2>/dev/null; then
-            # /var/log is root-owned, so a non-root run lands here. Fall back
-            # to per-user XDG state, never /tmp: a predictable world-writable
-            # path lets another local user pre-create the file (CWE-377), and
-            # this log is worth keeping to review afterwards, so it is not
-            # throwaway (no mktemp). If even that fails, log to /dev/null
-            # rather than aborting the whole setup run under `set -e`.
-            local state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/qubes-sdp"
-            if mkdir -p "${state_dir}" 2>/dev/null && chmod 0700 "${state_dir}" 2>/dev/null && (umask 077; : >> "${state_dir}/advanced-setup.log") 2>/dev/null; then
-                LOG_FILE="${state_dir}/advanced-setup.log"
-            else
-                echo "WARNING: could not create a log file; continuing without one" >&2
-                LOG_FILE="/dev/null"
-            fi
+    if [[ "${LOG_FILE}" != "${LOG_NULL}" ]] && ! { : >> "${LOG_FILE}"; } 2>/dev/null; then
+        # /var/log is root-owned, so a non-root run lands here. Fall back
+        # to per-user XDG state, never /tmp: a predictable world-writable
+        # path lets another local user pre-create the file (CWE-377), and
+        # this log is worth keeping to review afterwards, so it is not
+        # throwaway (no mktemp). If even that fails, log to /dev/null
+        # rather than aborting the whole setup run under `set -e`.
+        local state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/qubes-sdp"
+        if mkdir -p "${state_dir}" 2>/dev/null && chmod 0700 "${state_dir}" 2>/dev/null && (umask 077; : >> "${state_dir}/advanced-setup.log") 2>/dev/null; then
+            LOG_FILE="${state_dir}/advanced-setup.log"
+        else
+            echo "WARNING: could not create a log file; continuing without one" >&2
+            LOG_FILE="${LOG_NULL}"
         fi
     fi
 }
@@ -1232,7 +1233,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --no-log)
-            LOG_FILE="/dev/null"
+            LOG_FILE="${LOG_NULL}"
             shift
             ;;
         *)
@@ -1255,7 +1256,7 @@ done
 main() {
     # Initialize logging
     ensure_log_file
-    if [ "${LOG_FILE}" != "/dev/null" ]; then
+    if [[ "${LOG_FILE}" != "${LOG_NULL}" ]]; then
         log INFO "=== Qubes SDP Advanced Setup Started ==="
     fi
 

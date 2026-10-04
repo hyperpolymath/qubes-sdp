@@ -240,6 +240,71 @@ reports on changed code means the gate's source is itself in scope. A new
 checker should be written to satisfy the checkers already watching the
 repository, not merely to satisfy the check it implements.
 
+=== The sixth core matter: a Quality Gate that only main can fail
+
+`SonarCloud Code Analysis` is **not** one of the eight checks in #81, and it
+was already red on `main` before any of this work: it fails at `6c1bf2d`, two
+commits before the merge. It went unnoticed because a pull-request analysis
+scopes its leak period against the target branch, and this one passed on every
+PR while failing on `main`.
+
+The failure is a SonarCloud Quality Gate on **new code** — seven open issues,
+all created before this work started (2026-09-20, 2026-09-21, 2026-10-01):
+
+[cols="1,1,2,3",options="header"]
+|===
+|File |Rule |Quality |Finding
+
+|`qubes-setup-advanced.sh:42` |shelldre:S7688 |RELIABILITY
+|`[ ... ]` where `[[ ... ]]` is available (the script is `#!/bin/bash`)
+
+|`qubes-setup-advanced.sh:43` |shelldre:S1066 |MAINTAINABILITY
+|A nested `if` that can merge with its parent
+
+|`qubes-setup-advanced.sh:42,55,1235` |shelldre:S1192 |MAINTAINABILITY
+|The literal `/dev/null` repeated four times
+
+|`scripts/build-site.mjs:165` |javascript:S2871 |RELIABILITY
+|`.sort()` with no comparator — sorts by string coercion
+
+|`scripts/build-site.mjs:207` |javascript:S8786 |RELIABILITY
+|`/\/+$/` is quadratic on a run of slashes
+
+|`scripts/build-site.mjs:363` |javascript:S2871 |RELIABILITY
+|`.sort()` with no comparator
+
+|`.github/workflows/instant-sync.yml:22` |githubactions:S7637 |SECURITY
+|A mutable tag ref on a repository-dispatch trigger
+|===
+
+Four are RELIABILITY and one is SECURITY, and the gate requires `A` on both
+ratings for new code. The two MAINTAINABILITY findings do not move the gate but
+are fixed in the same pass, because they sit in the same three lines.
+
+The merge of #84 added `workflow-linter.yml` — a new file full of `uses:` tag
+refs, exactly what S7637 flags — and it produced **zero** SonarCloud findings.
+So the new guard is clean under the scanner that watches this repository.
+
+On the SECURITY finding specifically: pinning `instant-sync.yml` to a commit
+SHA does not contradict #74. That decision made `actions.lock` authoritative
+for the repository's *own* action refs; this one is a dispatch trigger whose
+purpose is to move trust across a repository boundary, and it now carries its
+own immutable ref. The lockfile entry stays in tag form on purpose — the drift
+check compares a 40-hex ref against the lock's `commit:` digest and reports
+"same action, two notations, not drift", and `gh actions-lock` classes the
+mismatch as the advisory `sha-as-ref` category. Verified both ways: the drift
+simulation reports the escape firing for exactly this entry and nothing else,
+and the new SHA resolves upstream.
+
+Every fix is behaviour-preserving, and that was checked rather than assumed:
+
+* `build-site.mjs` produces a byte-identical digest before and after
+  (`baefac130530a19cde2e1049f563def0849fb9deb2014935bcd1d8154fb4d48d`), and
+  `--baseurl` gives the same answer for `""`, `/`, `/docs/`, `/docs///`,
+  `/a/b` and `///`.
+* The shell edits are a condition rewrite and a constant substitution inside one
+  function; `bash -n` passes and the four sites are the only ones changed.
+
 == Decision
 
 . **`actions.lock` is authoritative for pins, and its agreement with the
