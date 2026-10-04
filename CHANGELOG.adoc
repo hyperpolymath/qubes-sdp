@@ -137,6 +137,21 @@ pentester)
   from the pre-AffineScript tree; with no `.ts`/`.js`/`.res` sources left after
   the ReScript eradication (#56) it could only ever fail. Removed, along with its
   `actions.lock` entries.
+* **CI — the SonarCloud Quality Gate on `main` passes.** It was already red
+  before any of this work and stayed invisible because a pull-request analysis
+  scopes its leak period against the target branch. Seven new-code issues,
+  every one pre-existing: four RELIABILITY (two `.sort()` calls with no
+  comparator, a quadratic `/\/+$/` trailing-slash strip, and `[` where `[[`
+  is available) and one SECURITY (`instant-sync.yml` pinned its
+  repository-dispatch trigger to a mutable tag). All fixed; the site digest is
+  byte-identical before and after. See `docs/decisions/0002-*`.
+* **CI — `Governance / Workflow security linter` has a route to green.** Its
+  `Check SHA-pinned actions` step ran `scripts/update-actions-lock.sh` from the
+  *caller* tree — a script that exists only in `hyperpolymath/standards` — so it
+  died with exit 127 for every consumer before it ever looked at a pin, and it
+  demanded inline SHA pins on top of a lockfile, the opposite of this
+  repository's model. The `hyperpolymath/standards` reusable pins are repointed
+  to `a9a3281d`, where that step is gone and a present lockfile is sufficient.
 
 ==== Added
 
